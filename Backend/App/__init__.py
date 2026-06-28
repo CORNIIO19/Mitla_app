@@ -14,12 +14,12 @@ def create_app():
     CORS(app)
 
     from App.Rutas.Autenticacion import auth_bp
-    from App.Rutas.Notas import note_bp
-    from App.Rutas.Bases import base_bp
+    from App.Rutas.Archivos import archivos_bp
+    from App.Rutas.Bases import bases_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
-    app.register_blueprint(note_bp, url_prefix="/api/notas")
-    app.register_blueprint(base_bp, url_prefix="/api/bases")
+    app.register_blueprint(archivos_bp, url_prefix="/api/archivos")
+    app.register_blueprint(bases_bp, url_prefix="/api/bases")
 
     SWAGGER_URL = "/docs"
     API_URL = "/static/swagger.json"

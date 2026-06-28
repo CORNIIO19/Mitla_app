@@ -1,0 +1,488 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{enumitem}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.multipart,fit,backgrounds}
+
+\geometry{margin=2.2cm}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlist[itemize]{noitemsep,topsep=2pt}
+\setlist[enumerate]{noitemsep,topsep=2pt}
+
+\lstdefinestyle{code}{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!8}
+}
+\lstset{style=code}
+
+\title{Reporte tecnico del sistema\\Gestor Inteligente de Notas}
+\author{Analisis del codigo fuente}
+\date{28 de mayo de 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Resumen ejecutivo}
+
+El proyecto es una API backend construida con Flask para gestionar usuarios, autenticacion con JWT, bases de conocimiento y archivos asociados. El sistema persiste informacion estructurada en SQLite y contenido fisico en carpetas bajo \texttt{Almacenamiento/}.
+
+El backend esta organizado en modulos: rutas HTTP, repositorios de datos, seguridad, inicializacion de base de datos, estrategias de procesamiento de archivos y documentacion Swagger/OpenAPI.
+
+\section{Tecnologias y bibliotecas}
+
+\begin{longtable}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Tecnologia / biblioteca} & \textbf{Uso dentro del sistema} \\
+\hline
+Python & Lenguaje principal. \\
+\hline
+Flask & Framework web para crear la API HTTP. \\
+\hline
+Flask Blueprints & Modularizacion de rutas por dominio. \\
+\hline
+flask-jwt-extended & Generacion y validacion de tokens JWT. \\
+\hline
+flask-cors & Habilita CORS. \\
+\hline
+flask-swagger-ui & Publica Swagger UI en \texttt{/docs}. \\
+\hline
+bcrypt & Hash y verificacion de contrasenas. \\
+\hline
+sqlite3 & Acceso directo a SQLite. \\
+\hline
+pathlib & Construccion de rutas de archivos. \\
+\hline
+shutil & Eliminacion recursiva de carpetas. \\
+\hline
+werkzeug.utils.secure\_filename & Sanitizacion de nombres de archivo. \\
+\hline
+abc & Definicion de clases abstractas para Strategy. \\
+\hline
+\end{longtable}
+
+\section{Estructura general}
+
+\begin{lstlisting}
+Backend/
+|-- App/
+|   |-- __init__.py
+|   |-- config.py
+|   |-- static/swagger.json
+|   |-- Rutas/
+|   |   |-- Autenticacion.py
+|   |   |-- Bases.py
+|   |   `-- Archivos.py
+|   |-- Seguridad/Passwords.py
+|   `-- Infraestructura/
+|       |-- base_datos.py
+|       |-- esquema.sql
+|       |-- Repositorios/
+|       |   |-- usuarios_repo.py
+|       |   |-- bases_repo.py
+|       |   |-- archivos_repo.py
+|       |   `-- notas_repo.py
+|       `-- Strategy_archivos/
+|           |-- strategy.py
+|           |-- markdown.py
+|           |-- texto.py
+|           `-- fabrica.py
+|-- Almacenamiento/
+|-- Instancia/Gestor_notas.db
+|-- run.py
+`-- requirements.txt
+\end{lstlisting}
+
+\section{Arquitectura}
+
+\subsection{Capas}
+
+\begin{longtable}{|p{3cm}|p{5cm}|p{7cm}|}
+\hline
+\textbf{Capa} & \textbf{Archivos} & \textbf{Responsabilidad} \\
+\hline
+Entrada HTTP & \texttt{run.py}, \texttt{App/\_\_init\_\_.py} & Crear app, inicializar DB y registrar Blueprints. \\
+\hline
+Rutas & \texttt{App/Rutas/*.py} & Recibir requests, validar datos y responder JSON. \\
+\hline
+Seguridad & \texttt{Passwords.py}, JWT & Hash de contrasenas y proteccion de endpoints. \\
+\hline
+Repositorios & \texttt{Repositorios/*.py} & SQL y almacenamiento fisico. \\
+\hline
+Infraestructura DB & \texttt{base\_datos.py}, \texttt{esquema.sql} & Conexion e inicializacion SQLite. \\
+\hline
+Estrategias & \texttt{Strategy\_archivos/*.py} & Validar y extraer contenido por tipo de archivo. \\
+\hline
+Documentacion & \texttt{swagger.json} & Contrato OpenAPI. \\
+\hline
+\end{longtable}
+
+\subsection{Diagrama de arquitectura}
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1.2cm,
+    box/.style={rectangle,draw,rounded corners,align=center,minimum width=3.2cm,minimum height=0.9cm,fill=blue!6},
+    db/.style={cylinder,draw,shape border rotate=90,aspect=0.25,align=center,minimum height=1.2cm,minimum width=2.2cm,fill=green!10},
+    fs/.style={rectangle,draw,align=center,minimum width=3cm,minimum height=0.9cm,fill=orange!10},
+    arrow/.style={-Latex,thick}
+]
+\node[box] (cliente) {Cliente HTTP\\Frontend};
+\node[box,below=of cliente] (flask) {Flask app\\\texttt{create\_app()}};
+\node[box,below left=1.1cm and 2.8cm of flask] (auth) {Blueprint Auth};
+\node[box,below=1.1cm of flask] (bases) {Blueprint Bases};
+\node[box,below right=1.1cm and 2.8cm of flask] (archivos) {Blueprint Archivos};
+
+\node[box,below=of auth] (usuariosRepo) {usuarios\_repo};
+\node[box,below=of bases] (basesRepo) {bases\_repo};
+\node[box,below=of archivos] (archivosRepo) {archivos\_repo};
+
+\node[db,below=1.4cm of basesRepo] (db) {SQLite\\Gestor\_notas.db};
+\node[fs,right=2.2cm of db] (fs) {Sistema de archivos\\Almacenamiento/};
+\node[box,right=2.0cm of archivosRepo] (strategy) {Factory + Strategy\\Markdown};
+\node[box,left=2.0cm of flask] (swagger) {Swagger UI\\\texttt{/docs}};
+
+\draw[arrow] (cliente) -- (flask);
+\draw[arrow] (flask) -- (auth);
+\draw[arrow] (flask) -- (bases);
+\draw[arrow] (flask) -- (archivos);
+\draw[arrow] (flask) -- (swagger);
+\draw[arrow] (auth) -- (usuariosRepo);
+\draw[arrow] (bases) -- (basesRepo);
+\draw[arrow] (archivos) -- (archivosRepo);
+\draw[arrow] (usuariosRepo) -- (db);
+\draw[arrow] (basesRepo) -- (db);
+\draw[arrow] (archivosRepo) -- (db);
+\draw[arrow] (basesRepo) -- (fs);
+\draw[arrow] (archivosRepo) -- (fs);
+\draw[arrow] (archivosRepo) -- (strategy);
+\end{tikzpicture}
+\end{center}
+
+\section{Funcionamiento de Flask}
+
+\subsection{\texttt{run.py}}
+
+El archivo \texttt{run.py} es el punto de entrada. Importa \texttt{create\_app}, ejecuta \texttt{initialize\_database()}, crea la app Flask y define la ruta raiz \texttt{/}. Si se ejecuta directamente, inicia el servidor con \texttt{debug=True}.
+
+\subsection{\texttt{App/\_\_init\_\_.py}}
+
+La funcion \texttt{create\_app()} implementa el patron Application Factory:
+
+\begin{enumerate}
+    \item Crea \texttt{Flask(\_\_name\_\_)}.
+    \item Configura \texttt{SECRET\_KEY} y \texttt{JWT\_SECRET\_KEY}.
+    \item Inicializa \texttt{JWTManager(app)}.
+    \item Inicializa \texttt{CORS(app)}.
+    \item Registra Blueprints.
+    \item Registra Swagger UI.
+\end{enumerate}
+
+\subsection{Blueprints}
+
+\begin{longtable}{|p{3cm}|p{5cm}|p{3cm}|p{4cm}|}
+\hline
+\textbf{Blueprint} & \textbf{Archivo} & \textbf{Prefijo} & \textbf{Funcion} \\
+\hline
+\texttt{auth\_bp} & \texttt{Autenticacion.py} & \texttt{/api/auth} & Registro y login. \\
+\hline
+\texttt{bases\_bp} & \texttt{Bases.py} & \texttt{/api/bases} & CRUD de bases. \\
+\hline
+\texttt{archivos\_bp} & \texttt{Archivos.py} & \texttt{/api/archivos} & Gestion de archivos. \\
+\hline
+\end{longtable}
+
+\section{Base de datos}
+
+\subsection{Inicializacion}
+
+La base SQLite se guarda en \texttt{Instancia/Gestor\_notas.db}. Si no existe, \texttt{initialize\_database()} ejecuta el script \texttt{App/Infraestructura/esquema.sql}. La conexion se obtiene con \texttt{get\_connection()}, que activa \texttt{PRAGMA foreign\_keys = ON}.
+
+\subsection{Tabla \texttt{usuarios}}
+
+\begin{longtable}{|p{4cm}|p{3cm}|p{7cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo} & \textbf{Descripcion} \\
+\hline
+\texttt{id\_usuario} & INTEGER PK & Identificador autoincremental. \\
+\hline
+\texttt{nombre} & TEXT NOT NULL & Nombre del usuario. \\
+\hline
+\texttt{email} & TEXT UNIQUE NOT NULL & Correo unico. \\
+\hline
+\texttt{telefono} & TEXT & Telefono opcional. \\
+\hline
+\texttt{password\_hash} & TEXT NOT NULL & Hash bcrypt. \\
+\hline
+\texttt{verificado} & INTEGER DEFAULT 0 & Bandera de verificacion. \\
+\hline
+\texttt{nivel\_privacidad} & TEXT DEFAULT 'privado' & Privacidad del usuario. \\
+\hline
+\texttt{fecha\_creacion} & TEXT DEFAULT CURRENT\_TIMESTAMP & Fecha de creacion. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla \texttt{bases\_conocimiento}}
+
+\begin{longtable}{|p{4cm}|p{3cm}|p{7cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo} & \textbf{Descripcion} \\
+\hline
+\texttt{id\_base} & INTEGER PK & Identificador de base. \\
+\hline
+\texttt{id\_usuario} & INTEGER FK & Usuario propietario. \\
+\hline
+\texttt{nombre} & TEXT NOT NULL & Nombre de la base. \\
+\hline
+\texttt{descripcion} & TEXT & Descripcion. \\
+\hline
+\texttt{ruta\_carpeta} & TEXT NOT NULL & Ruta fisica. \\
+\hline
+\texttt{fecha\_creacion} & TEXT DEFAULT CURRENT\_TIMESTAMP & Fecha de creacion. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla \texttt{archivos}}
+
+\begin{longtable}{|p{4cm}|p{3cm}|p{7cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo} & \textbf{Descripcion} \\
+\hline
+\texttt{id\_archivo} & INTEGER PK & Identificador del archivo. \\
+\hline
+\texttt{id\_base} & INTEGER FK & Base propietaria. \\
+\hline
+\texttt{id\_usuario} & INTEGER FK & Usuario propietario. \\
+\hline
+\texttt{titulo} & TEXT NOT NULL & Titulo derivado del nombre. \\
+\hline
+\texttt{nombre\_archivo} & TEXT NOT NULL & Nombre seguro. \\
+\hline
+\texttt{extension} & TEXT NOT NULL & Extension. \\
+\hline
+\texttt{mime\_type} & TEXT & MIME recibido. \\
+\hline
+\texttt{ruta\_archivo} & TEXT NOT NULL & Ruta fisica. \\
+\hline
+\texttt{contenido\_extraido} & TEXT & Contenido leido por Strategy. \\
+\hline
+\texttt{procesado} & INTEGER DEFAULT 0 & Bandera de procesamiento. \\
+\hline
+\texttt{fecha\_subida} & TEXT DEFAULT CURRENT\_TIMESTAMP & Fecha de carga. \\
+\hline
+\texttt{fecha\_actualizacion} & TEXT DEFAULT CURRENT\_TIMESTAMP & Fecha de actualizacion. \\
+\hline
+\end{longtable}
+
+\subsection{Diagrama entidad-relacion}
+
+\begin{center}
+\begin{tikzpicture}[
+    entity/.style={rectangle split,rectangle split parts=2,draw,align=left,minimum width=5cm,fill=gray!5},
+    rel/.style={-Latex,thick}
+]
+\node[entity] (usuarios) {
+    \textbf{usuarios}
+    \nodepart{second}
+    id\_usuario PK\\
+    nombre\\
+    email UNIQUE\\
+    telefono\\
+    password\_hash\\
+    verificado\\
+    nivel\_privacidad\\
+    fecha\_creacion
+};
+\node[entity,right=2cm of usuarios] (bases) {
+    \textbf{bases\_conocimiento}
+    \nodepart{second}
+    id\_base PK\\
+    id\_usuario FK\\
+    nombre\\
+    descripcion\\
+    ruta\_carpeta\\
+    fecha\_creacion
+};
+\node[entity,below=2cm of bases] (archivos) {
+    \textbf{archivos}
+    \nodepart{second}
+    id\_archivo PK\\
+    id\_base FK\\
+    id\_usuario FK\\
+    titulo\\
+    nombre\_archivo\\
+    extension\\
+    ruta\_archivo\\
+    contenido\_extraido
+};
+\draw[rel] (usuarios) -- node[above]{1 a N} (bases);
+\draw[rel] (bases) -- node[right]{1 a N} (archivos);
+\draw[rel] (usuarios.south) |- node[left]{1 a N} (archivos.west);
+\end{tikzpicture}
+\end{center}
+
+\section{Endpoints}
+
+\begin{longtable}{|p{2cm}|p{6cm}|p{3cm}|p{5cm}|}
+\hline
+\textbf{Metodo} & \textbf{Ruta} & \textbf{Proteccion} & \textbf{Funcion} \\
+\hline
+GET & \texttt{/} & Publica & Estado de API. \\
+\hline
+GET & \texttt{/docs} & Publica & Swagger UI. \\
+\hline
+POST & \texttt{/api/auth/register} & Publica & Registrar usuario. \\
+\hline
+POST & \texttt{/api/auth/login} & Publica & Iniciar sesion y devolver JWT. \\
+\hline
+GET & \texttt{/api/bases/} & JWT & Listar bases del usuario. \\
+\hline
+POST & \texttt{/api/bases/} & JWT & Crear base. \\
+\hline
+GET & \texttt{/api/bases/\{id\_base\}} & JWT & Obtener base. \\
+\hline
+PUT & \texttt{/api/bases/\{id\_base\}} & JWT & Actualizar base. \\
+\hline
+DELETE & \texttt{/api/bases/\{id\_base\}} & JWT & Eliminar base. \\
+\hline
+POST & \texttt{/api/archivos/base/\{id\_base\}/subir} & JWT & Subir archivo. \\
+\hline
+GET & \texttt{/api/archivos/base/\{id\_base\}} & JWT & Listar archivos por base. \\
+\hline
+GET & \texttt{/api/archivos/\{id\_archivo\}} & JWT & Obtener archivo. \\
+\hline
+DELETE & \texttt{/api/archivos/\{id\_archivo\}} & JWT & Eliminar archivo. \\
+\hline
+\end{longtable}
+
+\section{Funciones principales}
+
+\subsection{Autenticacion}
+
+\texttt{register()} recibe JSON, valida campos, verifica email duplicado, hashea la contrasena y crea usuario. \texttt{login()} busca el usuario, valida la contrasena y genera un token JWT.
+
+\subsection{Repositorios}
+
+\begin{longtable}{|p{5cm}|p{10cm}|}
+\hline
+\textbf{Funcion} & \textbf{Funcionamiento} \\
+\hline
+\texttt{create\_user} & Inserta usuario y devuelve \texttt{id\_usuario}. \\
+\hline
+\texttt{get\_user\_by\_email} & Consulta usuario por email. \\
+\hline
+\texttt{crear\_base} & Crea carpeta fisica e inserta base en SQLite. \\
+\hline
+\texttt{obtener\_bases} & Lista bases por usuario. \\
+\hline
+\texttt{obtener\_base} & Obtiene una base verificando propiedad. \\
+\hline
+\texttt{actualizar\_base} & Actualiza nombre y descripcion. \\
+\hline
+\texttt{eliminar\_base} & Borra registro y carpeta fisica. \\
+\hline
+\texttt{subir\_archivo} & Valida base, selecciona Strategy, guarda archivo, extrae contenido e inserta metadatos. \\
+\hline
+\texttt{obtener\_archivos\_por\_base} & Lista archivos de una base. \\
+\hline
+\texttt{obtener\_archivo} & Obtiene archivo verificando usuario. \\
+\hline
+\texttt{eliminar\_archivo} & Borra registro y archivo fisico. \\
+\hline
+\end{longtable}
+
+\section{Patrones de diseno}
+
+\begin{longtable}{|p{4cm}|p{5cm}|p{7cm}|}
+\hline
+\textbf{Patron} & \textbf{Ubicacion} & \textbf{Uso} \\
+\hline
+Application Factory & \texttt{App/\_\_init\_\_.py} & Construccion centralizada de Flask. \\
+\hline
+Blueprint & \texttt{App/Rutas/*.py} & Modulos de rutas. \\
+\hline
+Repository Pattern & \texttt{Repositorios/*.py} & Aisla SQL y operaciones de archivos. \\
+\hline
+Strategy Pattern & \texttt{Strategy\_archivos/*.py} & Procesamiento por tipo de archivo. \\
+\hline
+Factory simple & \texttt{fabrica.py} & Seleccion de estrategia por extension. \\
+\hline
+\end{longtable}
+
+\section{Flujo de la aplicacion}
+
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1cm,
+    start/.style={ellipse,draw,fill=green!10,align=center},
+    step/.style={rectangle,draw,rounded corners,fill=blue!6,align=center,minimum width=3.5cm,minimum height=0.8cm},
+    decision/.style={diamond,draw,fill=yellow!15,align=center,aspect=2},
+    arrow/.style={-Latex,thick}
+]
+\node[start] (inicio) {Inicio};
+\node[decision,below=of inicio] (cuenta) {Tiene cuenta?};
+\node[step,below left=1cm and 1.8cm of cuenta] (register) {Registrar usuario};
+\node[step,below right=1cm and 1.8cm of cuenta] (login) {Login};
+\node[step,below=2.2cm of cuenta] (jwt) {Recibir JWT};
+\node[step,below=of jwt] (base) {Crear/listar base};
+\node[step,below=of base] (folder) {Crear carpeta\\e insertar base};
+\node[step,below=of folder] (upload) {Subir archivo};
+\node[step,below=of upload] (strategy) {Seleccionar Strategy};
+\node[step,below=of strategy] (save) {Guardar archivo\\extraer contenido};
+\node[step,below=of save] (db) {Insertar metadatos};
+\node[start,below=of db] (fin) {Consultar o eliminar};
+
+\draw[arrow] (inicio) -- (cuenta);
+\draw[arrow] (cuenta) -- node[left]{No} (register);
+\draw[arrow] (cuenta) -- node[right]{Si} (login);
+\draw[arrow] (register) |- (login);
+\draw[arrow] (login) -- (jwt);
+\draw[arrow] (jwt) -- (base);
+\draw[arrow] (base) -- (folder);
+\draw[arrow] (folder) -- (upload);
+\draw[arrow] (upload) -- (strategy);
+\draw[arrow] (strategy) -- (save);
+\draw[arrow] (save) -- (db);
+\draw[arrow] (db) -- (fin);
+\end{tikzpicture}
+\end{center}
+
+\section{Storytelling cronologico}
+
+El desarrollo parece haber iniciado con una API Flask minima, representada por \texttt{run.py} y la ruta raiz. Luego se incorporo una configuracion centralizada en \texttt{config.py}, seguida por la inicializacion de SQLite con \texttt{base\_datos.py} y \texttt{esquema.sql}.
+
+Despues aparecio la gestion de usuarios: tabla \texttt{usuarios}, repositorio, hash de contrasenas con bcrypt y rutas de autenticacion. Sobre esa base se agrego JWT para proteger los recursos.
+
+La siguiente etapa fue la creacion de bases de conocimiento. Aqui el sistema empezo a mezclar persistencia SQL con almacenamiento en disco: cada base tiene una fila en SQLite y una carpeta fisica.
+
+Mas adelante se agrego la gestion de archivos. Para no acoplar el backend a un solo formato, se introdujo el patron Strategy con una interfaz abstracta, una estrategia Markdown y una fabrica por extension.
+
+Finalmente se integro Swagger UI para exponer la documentacion interactiva. Tambien quedo evidencia de una etapa anterior de notas mediante \texttt{notas\_repo.py}; actualmente ese componente no esta activo porque no existe ruta de notas, no existe tabla \texttt{notas} en el esquema actual y referencia una constante inexistente \texttt{STORAGE\_PATH}.
+
+\section{Observaciones}
+
+\begin{itemize}
+    \item El codigo real solo soporta archivos \texttt{.md}; Swagger menciona \texttt{.txt}, pero la estrategia de texto esta vacia y comentada.
+    \item \texttt{flask\_swagger\_ui} se usa en el codigo, pero no aparece en \texttt{requirements.txt}.
+    \item Las claves secretas estan hardcodeadas; para produccion deberian moverse a variables de entorno.
+    \item Al actualizar el nombre de una base no se renombra la carpeta fisica.
+    \item La eliminacion de registros y archivos ocurre en pasos separados; si uno falla puede haber inconsistencia.
+\end{itemize}
+
+\section{Conclusion}
+
+El sistema es una API Flask modular con autenticacion JWT, base de datos SQLite y almacenamiento fisico de archivos. Su arquitectura actual es clara y extensible: Blueprints para rutas, repositorios para persistencia, bcrypt para seguridad, Strategy para formatos de archivo y Swagger para documentacion. Las areas a pulir son la alineacion entre documentacion y codigo, la limpieza del modulo legado de notas y la configuracion segura para produccion.
+
+\end{document}

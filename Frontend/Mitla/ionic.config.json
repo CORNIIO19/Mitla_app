@@ -1,0 +1,7 @@
+{
+  "name": "Mitla",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

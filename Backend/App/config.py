@@ -6,4 +6,4 @@ DB_PATH = BASE_DIR / "Instancia" / "Gestor_notas.db"
 
 SCHEMA_PATH = BASE_DIR / "App" / "Infraestructura" / "esquema.sql"
 
-STORAGE_PATH = BASE_DIR / "Almacenamiento"
+ALMACENAMIENTO_PATH  = BASE_DIR / "Almacenamiento"

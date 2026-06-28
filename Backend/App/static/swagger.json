@@ -1,261 +1,447 @@
 {
   "openapi": "3.0.0",
-
   "info": {
     "title": "Gestor Inteligente de Notas API",
     "version": "1.0.0",
-    "description": "API para gestionar usuarios y notas"
+    "description": "API para autenticación, gestión de bases de conocimiento y administración de archivos mediante Strategy."
   },
-
   "servers": [
     {
       "url": "http://127.0.0.1:5000"
     }
   ],
-
-  "paths": {
-
-    "/": {
-
-      "get": {
-
-        "summary": "Verificar estado del backend",
-
-        "responses": {
-
-          "200": {
-            "description": "Servidor funcionando"
-          }
-
-        }
-
-      }
-
+  "tags": [
+    {
+      "name": "Autenticación"
     },
-
-    "/api/auth/register": {
-
-      "post": {
-
-        "summary": "Registrar usuario",
-
-        "requestBody": {
-
-          "required": true,
-
-          "content": {
-
-            "application/json": {
-
-              "schema": {
-
-                "type": "object",
-
-                "properties": {
-
-                  "nombre": {
-                    "type": "string",
-                    "example": "Omar"
-                  },
-
-                  "email": {
-                    "type": "string",
-                    "example": "omar@test.com"
-                  },
-
-                  "telefono": {
-                    "type": "string",
-                    "example": "5555555555"
-                  },
-
-                  "password": {
-                    "type": "string",
-                    "example": "123456"
-                  }
-
-                }
-
-              }
-
-            }
-
-          }
-
-        },
-
+    {
+      "name": "Bases de conocimiento"
+    },
+    {
+      "name": "Archivos"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Verificar estado de la API",
+        "tags": [
+          "Sistema"
+        ],
         "responses": {
-
+          "200": {
+            "description": "API funcionando correctamente"
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "summary": "Registrar usuario",
+        "tags": [
+          "Autenticación"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistroUsuario"
+              }
+            }
+          }
+        },
+        "responses": {
           "201": {
             "description": "Usuario registrado correctamente"
           },
-
-          "409": {
-            "description": "El email ya existe"
-          }
-
-        }
-
-      }
-
-    },
-
-    "/api/auth/login": {
-
-      "post": {
-
-        "summary": "Iniciar sesión",
-
-        "requestBody": {
-
-          "required": true,
-
-          "content": {
-
-            "application/json": {
-
-              "schema": {
-
-                "type": "object",
-
-                "properties": {
-
-                  "email": {
-                    "type": "string",
-                    "example": "omar@test.com"
-                  },
-
-                  "password": {
-                    "type": "string",
-                    "example": "123456"
-                  }
-
-                }
-
-              }
-
-            }
-
-          }
-
-        },
-
-        "responses": {
-
-          "200": {
-            "description": "Login correcto"
+          "400": {
+            "description": "Datos obligatorios faltantes"
           },
-
+          "409": {
+            "description": "El email ya está registrado"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Iniciar sesión",
+        "tags": [
+          "Autenticación"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUsuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login correcto. Devuelve token JWT."
+          },
           "401": {
             "description": "Credenciales inválidas"
           }
-
         }
-
       }
-
     },
-
-    "/api/notas/": {
-
+    "/api/bases/": {
       "get": {
-
-        "summary": "Obtener notas del usuario",
-
+        "summary": "Listar bases de conocimiento del usuario",
+        "tags": [
+          "Bases de conocimiento"
+        ],
         "security": [
           {
             "bearerAuth": []
           }
         ],
-
         "responses": {
-
           "200": {
-            "description": "Lista de notas"
+            "description": "Lista de bases de conocimiento"
+          },
+          "401": {
+            "description": "Token inválido o ausente"
           }
-
         }
-
       },
-
       "post": {
-
-        "summary": "Crear nota",
-
+        "summary": "Crear base de conocimiento",
+        "tags": [
+          "Bases de conocimiento"
+        ],
         "security": [
           {
             "bearerAuth": []
           }
         ],
-
         "requestBody": {
-
           "required": true,
-
           "content": {
-
             "application/json": {
-
               "schema": {
-
-                "type": "object",
-
-                "properties": {
-
-                  "titulo": {
-                    "type": "string",
-                    "example": "Mi primera nota"
-                  },
-
-                  "contenido": {
-                    "type": "string",
-                    "example": "# Hola\nContenido markdown"
-                  },
-
-                  "visibilidad": {
-                    "type": "string",
-                    "example": "privada"
-                  }
-
-                }
-
+                "$ref": "#/components/schemas/BaseConocimientoCrear"
               }
-
             }
-
           }
-
         },
-
         "responses": {
-
           "201": {
-            "description": "Nota creada"
+            "description": "Base de conocimiento creada correctamente"
+          },
+          "400": {
+            "description": "El nombre es obligatorio"
+          },
+          "401": {
+            "description": "Token inválido o ausente"
           }
-
         }
-
       }
-
+    },
+    "/api/bases/{id_base}": {
+      "get": {
+        "summary": "Obtener una base de conocimiento por ID",
+        "tags": [
+          "Bases de conocimiento"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdBase"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Base encontrada"
+          },
+          "404": {
+            "description": "Base no encontrada"
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualizar base de conocimiento",
+        "tags": [
+          "Bases de conocimiento"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdBase"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BaseConocimientoCrear"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Base actualizada correctamente"
+          },
+          "404": {
+            "description": "Base no encontrada"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar base de conocimiento",
+        "tags": [
+          "Bases de conocimiento"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdBase"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Base eliminada correctamente"
+          },
+          "404": {
+            "description": "Base no encontrada"
+          }
+        }
+      }
+    },
+    "/api/archivos/base/{id_base}/subir": {
+      "post": {
+        "summary": "Subir archivo a una base de conocimiento",
+        "description": "Permite subir archivos soportados por el patrón Strategy. Actualmente soporta .md y .txt.",
+        "tags": [
+          "Archivos"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdBase"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "archivo"
+                ],
+                "properties": {
+                  "archivo": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Archivo .md o .txt"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Archivo guardado correctamente"
+          },
+          "400": {
+            "description": "Archivo no enviado, inválido o tipo no soportado"
+          },
+          "401": {
+            "description": "Token inválido o ausente"
+          }
+        }
+      }
+    },
+    "/api/archivos/base/{id_base}": {
+      "get": {
+        "summary": "Listar archivos de una base de conocimiento",
+        "tags": [
+          "Archivos"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdBase"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de archivos registrados en la base"
+          },
+          "401": {
+            "description": "Token inválido o ausente"
+          }
+        }
+      }
+    },
+    "/api/archivos/{id_archivo}": {
+      "get": {
+        "summary": "Obtener archivo por ID",
+        "tags": [
+          "Archivos"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdArchivo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Archivo encontrado"
+          },
+          "404": {
+            "description": "Archivo no encontrado"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar archivo",
+        "tags": [
+          "Archivos"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdArchivo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Archivo eliminado correctamente"
+          },
+          "404": {
+            "description": "Archivo no encontrado"
+          }
+        }
+      }
     }
-
   },
-
   "components": {
-
     "securitySchemes": {
-
       "bearerAuth": {
-
         "type": "http",
-
         "scheme": "bearer",
-
         "bearerFormat": "JWT"
-
       }
-
+    },
+    "parameters": {
+      "IdBase": {
+        "name": "id_base",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "example": 1
+        }
+      },
+      "IdArchivo": {
+        "name": "id_archivo",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "schemas": {
+      "RegistroUsuario": {
+        "type": "object",
+        "required": [
+          "nombre",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "example": "Omar"
+          },
+          "email": {
+            "type": "string",
+            "example": "omar@test.com"
+          },
+          "telefono": {
+            "type": "string",
+            "example": "5555555555"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        }
+      },
+      "LoginUsuario": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "omar@test.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
+        }
+      },
+      "BaseConocimientoCrear": {
+        "type": "object",
+        "required": [
+          "nombre"
+        ],
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "example": "Inteligencia Artificial"
+          },
+          "descripcion": {
+            "type": "string",
+            "example": "Base de conocimiento con archivos sobre IA, embeddings y RAG."
+          }
+        }
+      }
     }
-
   }
-
 }

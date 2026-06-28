@@ -1,63 +1,138 @@
+from pathlib import Path
+import shutil
+
+from App.config import ALMACENAMIENTO_PATH
 from App.Infraestructura.base_datos import get_connection
 
 
-def create_base(id_usuario_creador, nombre, descripcion, privacidad="privada"):
-    connection = get_connection()
-    cursor = connection.cursor()
+def normalizar_nombre(nombre):
+    return nombre.strip().lower().replace(" ", "_")
+
+
+def crear_base(id_usuario, nombre, descripcion=""):
+    nombre_carpeta = normalizar_nombre(nombre)
+
+    ruta_carpeta = (
+        ALMACENAMIENTO_PATH
+        / "usuarios"
+        / str(id_usuario)
+        / "bases"
+        / nombre_carpeta
+    )
+
+    ruta_carpeta.mkdir(parents=True, exist_ok=True)
+
+    conexion = get_connection()
+    cursor = conexion.cursor()
 
     cursor.execute("""
         INSERT INTO bases_conocimiento (
-            id_usuario_creador,
+            id_usuario,
             nombre,
             descripcion,
-            privacidad
+            ruta_carpeta
         )
         VALUES (?, ?, ?, ?)
     """, (
-        id_usuario_creador,
+        id_usuario,
         nombre,
         descripcion,
-        privacidad
+        str(ruta_carpeta)
     ))
 
-    connection.commit()
+    conexion.commit()
     id_base = cursor.lastrowid
-    connection.close()
+    conexion.close()
 
     return id_base
 
 
-def get_bases_by_user(id_usuario):
-    connection = get_connection()
-    cursor = connection.cursor()
+def obtener_bases(id_usuario):
+    conexion = get_connection()
+    cursor = conexion.cursor()
 
     cursor.execute("""
         SELECT *
         FROM bases_conocimiento
-        WHERE id_usuario_creador = ?
+        WHERE id_usuario = ?
         ORDER BY fecha_creacion DESC
     """, (id_usuario,))
 
     bases = cursor.fetchall()
-    connection.close()
+    conexion.close()
 
     return bases
 
 
-def add_note_to_base(id_base, id_nota):
-    connection = get_connection()
-    cursor = connection.cursor()
+def obtener_base(id_base, id_usuario):
+    conexion = get_connection()
+    cursor = conexion.cursor()
 
     cursor.execute("""
-        INSERT OR IGNORE INTO base_nota (
-            id_base,
-            id_nota
-        )
-        VALUES (?, ?)
+        SELECT *
+        FROM bases_conocimiento
+        WHERE id_base = ?
+        AND id_usuario = ?
     """, (
         id_base,
-        id_nota
+        id_usuario
     ))
 
-    connection.commit()
-    connection.close()
+    base = cursor.fetchone()
+    conexion.close()
+
+    return base
+
+
+def actualizar_base(id_base, id_usuario, nombre, descripcion):
+    conexion = get_connection()
+    cursor = conexion.cursor()
+
+    cursor.execute("""
+        UPDATE bases_conocimiento
+        SET nombre = ?,
+            descripcion = ?
+        WHERE id_base = ?
+        AND id_usuario = ?
+    """, (
+        nombre,
+        descripcion,
+        id_base,
+        id_usuario
+    ))
+
+    conexion.commit()
+    filas = cursor.rowcount
+    conexion.close()
+
+    return filas
+
+
+def eliminar_base(id_base, id_usuario):
+    base = obtener_base(id_base, id_usuario)
+
+    if not base:
+        return 0
+
+    ruta = Path(base["ruta_carpeta"])
+
+    conexion = get_connection()
+    cursor = conexion.cursor()
+
+    cursor.execute("""
+        DELETE FROM bases_conocimiento
+        WHERE id_base = ?
+        AND id_usuario = ?
+    """, (
+        id_base,
+        id_usuario
+    ))
+
+    conexion.commit()
+    filas = cursor.rowcount
+    conexion.close()
+
+    if ruta.exists():
+        shutil.rmtree(ruta)
+
+    return filas
