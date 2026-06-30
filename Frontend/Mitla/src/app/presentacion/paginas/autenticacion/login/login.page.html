@@ -1,13 +1,60 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>login</ion-title>
+    <ion-title>Mitla</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">login</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Iniciar sesión</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <ion-item>
+        <ion-label position="stacked">Correo electrónico</ion-label>
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="correo@ejemplo.com">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          placeholder="Tu contraseña">
+        </ion-input>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        class="ion-margin-top"
+        (click)="iniciarSesion()"
+        [disabled]="cargando">
+
+        {{ cargando ? 'Iniciando sesión...' : 'Entrar' }}
+
+      </ion-button>
+
+      <ion-text color="danger" *ngIf="error">
+        <p>{{ error }}</p>
+      </ion-text>
+
+      <ion-button
+        expand="block"
+        fill="clear"
+        routerLink="/registro">
+
+        Crear cuenta
+
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
