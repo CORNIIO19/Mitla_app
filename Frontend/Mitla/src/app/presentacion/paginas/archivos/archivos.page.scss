@@ -1,0 +1,14 @@
+.estado-carga {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.06);
+}

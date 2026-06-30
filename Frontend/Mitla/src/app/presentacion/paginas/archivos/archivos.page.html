@@ -1,13 +1,104 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>archivos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/bases-conocimiento"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Archivos de la base</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">archivos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Subir archivo</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <input
+        type="file"
+        accept=".md"
+        (change)="seleccionarArchivo($event)"
+      />
+
+      <ion-text *ngIf="archivoSeleccionado">
+        <p>Archivo seleccionado: {{ archivoSeleccionado.name }}</p>
+      </ion-text>
+
+      <ion-button
+        expand="block"
+        class="ion-margin-top"
+        (click)="subirArchivo()"
+        [disabled]="subiendo">
+
+        {{ subiendo ? 'Subiendo...' : 'Subir archivo' }}
+
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-text color="success" *ngIf="mensaje">
+    <p>{{ mensaje }}</p>
+  </ion-text>
+
+  <ion-text color="danger" *ngIf="error">
+    <p>{{ error }}</p>
+  </ion-text>
+
+  <div class="estado-carga" *ngIf="cargando">
+    <ion-spinner></ion-spinner>
+    <p>Cargando archivos...</p>
+  </div>
+
+  <ion-card *ngIf="!cargando">
+    <ion-card-header>
+      <ion-card-title>Archivos guardados</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <ion-text *ngIf="archivos.length === 0">
+        <p>Esta base todavía no tiene archivos.</p>
+      </ion-text>
+
+      <ion-list *ngIf="archivos.length > 0">
+        <ion-item
+          button
+          *ngFor="let archivo of archivos"
+          (click)="abrirArchivo(archivo)">
+
+          <ion-label>
+            <h2>{{ archivo.titulo }}</h2>
+            <p>{{ archivo.nombre_archivo }}</p>
+            <p>Extensión: {{ archivo.extension }}</p>
+          </ion-label>
+
+          <ion-button
+            color="danger"
+            slot="end"
+            (click)="eliminarArchivo(archivo, $event)">
+
+            Eliminar
+
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="archivoAbierto">
+    <ion-card-header>
+      <ion-card-title>{{ archivoAbierto.titulo }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><strong>Archivo:</strong> {{ archivoAbierto.nombre_archivo }}</p>
+      <p><strong>Ruta:</strong> {{ archivoAbierto.ruta_archivo }}</p>
+
+      <pre>{{ archivoAbierto.contenido_extraido || 'Sin contenido extraído.' }}</pre>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
