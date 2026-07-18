@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TokenService } from '../../../seguridad/servicios/token.service';
 
 import {
   IonContent,
@@ -20,18 +19,22 @@ import {
   IonList,
   IonLabel,
   IonText,
-  IonSpinner, IonButtons } from '@ionic/angular/standalone';
+  IonSpinner,
+  IonButtons
+} from '@ionic/angular/standalone';
 
 import { BaseConocimiento } from '../../../dominio/entidades/base-conocimiento.model';
 import { ListarBasesUseCase } from '../../../aplicacion/casos-uso/listar-bases.usecase';
 import { CrearBaseUseCase } from '../../../aplicacion/casos-uso/crear-base.usecase';
+import { ActualizarBaseUseCase } from '../../../aplicacion/casos-uso/actualizar-base.usecase';
+import { TokenService } from '../../../seguridad/servicios/token.service';
 
 @Component({
   selector: 'app-bases-conocimiento',
   templateUrl: './bases-conocimiento.page.html',
   styleUrls: ['./bases-conocimiento.page.scss'],
   standalone: true,
-  imports: [IonButtons, 
+  imports: [
     CommonModule,
     FormsModule,
     RouterModule,
@@ -50,7 +53,8 @@ import { CrearBaseUseCase } from '../../../aplicacion/casos-uso/crear-base.useca
     IonList,
     IonLabel,
     IonText,
-    IonSpinner
+    IonSpinner,
+    IonButtons
   ]
 })
 export class BasesConocimientoPage {
@@ -59,8 +63,11 @@ export class BasesConocimientoPage {
   nombre = '';
   descripcion = '';
 
+  idBaseEditando: number | null = null;
+
   cargando = false;
   creando = false;
+  editando = false;
 
   error = '';
   mensaje = '';
@@ -68,9 +75,9 @@ export class BasesConocimientoPage {
   constructor(
     private listarBasesUseCase: ListarBasesUseCase,
     private crearBaseUseCase: CrearBaseUseCase,
+    private actualizarBaseUseCase: ActualizarBaseUseCase,
     private router: Router,
     private tokenService: TokenService
-
   ) {}
 
   ionViewWillEnter(): void {
@@ -115,10 +122,8 @@ export class BasesConocimientoPage {
     }).subscribe({
       next: () => {
         this.mensaje = 'Base de conocimiento creada correctamente.';
-        this.nombre = '';
-        this.descripcion = '';
+        this.limpiarFormulario();
         this.creando = false;
-
         this.cargarBases();
       },
       error: (error) => {
@@ -129,14 +134,72 @@ export class BasesConocimientoPage {
     });
   }
 
+  iniciarEdicion(base: BaseConocimiento, event: Event): void {
+    event.stopPropagation();
+
+    this.idBaseEditando = base.id_base;
+    this.nombre = base.nombre;
+    this.descripcion = base.descripcion || '';
+
+    this.error = '';
+    this.mensaje = '';
+  }
+
+  guardarCambios(): void {
+    this.error = '';
+    this.mensaje = '';
+
+    if (!this.idBaseEditando) {
+      this.error = 'No hay una base seleccionada para editar.';
+      return;
+    }
+
+    const nombreLimpio = this.nombre.trim();
+    const descripcionLimpia = this.descripcion.trim();
+
+    if (!nombreLimpio) {
+      this.error = 'El nombre de la base es obligatorio.';
+      return;
+    }
+
+    this.editando = true;
+
+    this.actualizarBaseUseCase.ejecutar(this.idBaseEditando, {
+      nombre: nombreLimpio,
+      descripcion: descripcionLimpia || undefined
+    }).subscribe({
+      next: () => {
+        this.mensaje = 'Base de conocimiento actualizada correctamente.';
+        this.limpiarFormulario();
+        this.editando = false;
+        this.cargarBases();
+      },
+      error: (error) => {
+        console.error(error);
+        this.error = 'No se pudo actualizar la base de conocimiento.';
+        this.editando = false;
+      }
+    });
+  }
+
+  cancelarEdicion(): void {
+    this.limpiarFormulario();
+    this.error = '';
+    this.mensaje = '';
+  }
+
+  limpiarFormulario(): void {
+    this.nombre = '';
+    this.descripcion = '';
+    this.idBaseEditando = null;
+  }
+
   abrirBase(base: BaseConocimiento): void {
     this.router.navigate(['/archivos', base.id_base]);
   }
 
-
-cerrarSesion(): void {
-  this.tokenService.limpiarSesion();
-  this.router.navigate(['/login']);
-}
-
+  cerrarSesion(): void {
+    this.tokenService.limpiarSesion();
+    this.router.navigate(['/login']);
+  }
 }

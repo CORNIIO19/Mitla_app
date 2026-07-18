@@ -1,13 +1,91 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>registro</ion-title>
+    <ion-title>Mitla</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">registro</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Crear cuenta</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <ion-item>
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input
+          type="text"
+          [(ngModel)]="nombre"
+          placeholder="Tu nombre">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Correo electrónico</ion-label>
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="correo@ejemplo.com">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Teléfono</ion-label>
+        <ion-input
+          type="tel"
+          [(ngModel)]="telefono"
+          placeholder="Tu número de teléfono">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          placeholder="Crea una contraseña">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Confirmar contraseña</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="confirmarPassword"
+          placeholder="Repite tu contraseña">
+        </ion-input>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        class="ion-margin-top"
+        (click)="registrar()"
+        [disabled]="cargando">
+
+        {{ cargando ? 'Creando cuenta...' : 'Crear cuenta' }}
+
+      </ion-button>
+
+      <ion-text color="success" *ngIf="mensaje">
+        <p>{{ mensaje }}</p>
+      </ion-text>
+
+      <ion-text color="danger" *ngIf="error">
+        <p>{{ error }}</p>
+      </ion-text>
+
+      <ion-button
+        expand="block"
+        fill="clear"
+        routerLink="/login">
+
+        Ya tengo cuenta
+
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

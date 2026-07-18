@@ -14,7 +14,9 @@
 
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Crear nueva base</ion-card-title>
+      <ion-card-title>
+        {{ idBaseEditando ? 'Editar base' : 'Crear nueva base' }}
+      </ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
@@ -36,12 +38,35 @@
       </ion-item>
 
       <ion-button
+        *ngIf="!idBaseEditando"
         expand="block"
         class="ion-margin-top"
         (click)="crearBase()"
         [disabled]="creando">
 
         {{ creando ? 'Creando...' : 'Crear base' }}
+
+      </ion-button>
+
+      <ion-button
+        *ngIf="idBaseEditando"
+        expand="block"
+        class="ion-margin-top"
+        (click)="guardarCambios()"
+        [disabled]="editando">
+
+        {{ editando ? 'Guardando...' : 'Guardar cambios' }}
+
+      </ion-button>
+
+      <ion-button
+        *ngIf="idBaseEditando"
+        expand="block"
+        fill="clear"
+        color="medium"
+        (click)="cancelarEdicion()">
+
+        Cancelar edición
 
       </ion-button>
 
@@ -84,6 +109,16 @@
             <p>{{ base.descripcion || 'Sin descripción' }}</p>
             <p>ID: {{ base.id_base }}</p>
           </ion-label>
+
+          <ion-button
+            slot="end"
+            fill="clear"
+            color="primary"
+            (click)="iniciarEdicion(base, $event)">
+
+            Editar
+
+          </ion-button>
 
         </ion-item>
 
