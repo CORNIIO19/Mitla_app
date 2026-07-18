@@ -41,18 +41,20 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-text color="success" *ngIf="mensaje">
-    <p>{{ mensaje }}</p>
-  </ion-text>
+    <app-mensaje-alerta
+      tipo="success"
+      [mensaje]="mensaje">
+    </app-mensaje-alerta>
 
-  <ion-text color="danger" *ngIf="error">
-    <p>{{ error }}</p>
-  </ion-text>
+    <app-mensaje-alerta
+      tipo="danger"
+      [mensaje]="error">
+    </app-mensaje-alerta>
 
-  <div class="estado-carga" *ngIf="cargando">
-    <ion-spinner></ion-spinner>
-    <p>Cargando archivos...</p>
-  </div>
+  <app-estado-carga
+    *ngIf="cargando"
+    mensaje="Cargando archivos...">
+  </app-estado-carga>
 
   <ion-card *ngIf="!cargando">
     <ion-card-header>
@@ -61,9 +63,11 @@
 
     <ion-card-content>
 
-      <ion-text *ngIf="archivos.length === 0">
-        <p>Esta base todavía no tiene archivos.</p>
-      </ion-text>
+      <app-estado-vacio
+        *ngIf="archivos.length === 0"
+        titulo="Sin archivos"
+        mensaje="Esta base todavía no tiene archivos. Sube un archivo Markdown para comenzar.">
+      </app-estado-vacio>
 
       <div class="contenedor-archivos" *ngIf="archivos.length > 0">
 

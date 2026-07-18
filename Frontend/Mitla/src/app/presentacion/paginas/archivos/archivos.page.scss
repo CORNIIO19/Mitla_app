@@ -18,3 +18,21 @@ pre {
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
+
+.contenedor-archivos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .contenedor-archivos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .contenedor-archivos {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

@@ -30,7 +30,9 @@ import { CrearBaseUseCase } from '../../../aplicacion/casos-uso/crear-base.useca
 import { ActualizarBaseUseCase } from '../../../aplicacion/casos-uso/actualizar-base.usecase';
 import { TokenService } from '../../../seguridad/servicios/token.service';
 import { TarjetaBaseComponent } from '../../componentes/tarjeta-base/tarjeta-base.component';
-
+import { EstadoCargaComponent } from '../../componentes/estado-carga/estado-carga.component';
+import { EstadoVacioComponent } from '../../componentes/estado-vacio/estado-vacio.component';
+import { MensajeAlertaComponent } from '../../componentes/mensaje-alerta/mensaje-alerta.component';
 @Component({
   selector: 'app-bases-conocimiento',
   templateUrl: './bases-conocimiento.page.html',
@@ -52,13 +54,16 @@ import { TarjetaBaseComponent } from '../../componentes/tarjeta-base/tarjeta-bas
     IonInput,
     IonTextarea,
     IonButton,
-    IonList,
+    // IonList,
     IonLabel,
-    IonText,
-    IonSpinner,
+    // IonText,
+    // IonSpinner,
     // IonButtons,
     BarraSuperiorComponent,
-    TarjetaBaseComponent
+    TarjetaBaseComponent,
+    EstadoCargaComponent,
+    EstadoVacioComponent,
+    MensajeAlertaComponent
   ]
 })
 export class BasesConocimientoPage {

@@ -67,18 +67,20 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-text color="success" *ngIf="mensaje">
-    <p>{{ mensaje }}</p>
-  </ion-text>
+  <app-mensaje-alerta
+    tipo="success"
+    [mensaje]="mensaje">
+  </app-mensaje-alerta>
 
-  <ion-text color="danger" *ngIf="error">
-    <p>{{ error }}</p>
-  </ion-text>
+  <app-mensaje-alerta
+    tipo="danger"
+    [mensaje]="error">
+  </app-mensaje-alerta>
 
-  <div class="estado-carga" *ngIf="cargando">
-    <ion-spinner></ion-spinner>
-    <p>Cargando bases...</p>
-  </div>
+  <app-estado-carga
+    *ngIf="cargando"
+    mensaje="Cargando bases...">
+  </app-estado-carga>
 
   <ion-card *ngIf="!cargando">
     <ion-card-header>
@@ -87,9 +89,11 @@
 
     <ion-card-content>
 
-      <ion-text *ngIf="bases.length === 0">
-        <p>Aún no tienes bases de conocimiento.</p>
-      </ion-text>
+      <app-estado-vacio
+        *ngIf="bases.length === 0"
+        titulo="Sin bases de conocimiento"
+        mensaje="Aún no tienes bases de conocimiento. Crea una para comenzar.">
+      </app-estado-vacio>
 
       <div class="contenedor-bases" *ngIf="bases.length > 0">
 

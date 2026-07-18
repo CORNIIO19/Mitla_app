@@ -28,6 +28,9 @@ import { SubirArchivoUseCase } from '../../../aplicacion/casos-uso/subir-archivo
 import { ObtenerArchivoUseCase } from '../../../aplicacion/casos-uso/obtener-archivo.usecase';
 import { EliminarArchivoUseCase } from '../../../aplicacion/casos-uso/eliminar-archivo.usecase';
 import { TarjetaArchivoComponent } from '../../componentes/tarjeta-archivo/tarjeta-archivo.component';
+import { EstadoCargaComponent } from '../../componentes/estado-carga/estado-carga.component';
+import { EstadoVacioComponent } from '../../componentes/estado-vacio/estado-vacio.component';
+import { MensajeAlertaComponent } from '../../componentes/mensaje-alerta/mensaje-alerta.component';
 @Component({
   selector: 'app-archivos',
   templateUrl: './archivos.page.html',
@@ -48,12 +51,15 @@ import { TarjetaArchivoComponent } from '../../componentes/tarjeta-archivo/tarje
     IonCardContent,
     IonButton,
     IonText,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonSpinner,
+    // IonList,
+    // IonItem,
+    // IonLabel,
+    // IonSpinner,
     BarraSuperiorComponent,
-    TarjetaArchivoComponent
+    TarjetaArchivoComponent,
+    EstadoCargaComponent,
+    EstadoVacioComponent,
+    MensajeAlertaComponent
   ]
 })
 export class ArchivosPage {

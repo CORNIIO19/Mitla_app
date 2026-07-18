@@ -1,3 +1,16 @@
-<p>
-  estado-vacio works!
-</p>
+<div class="estado-vacio">
+  <ion-text>
+    <h3>{{ titulo }}</h3>
+    <p>{{ mensaje }}</p>
+  </ion-text>
+
+  <ion-button
+    *ngIf="textoBoton"
+    fill="outline"
+    size="small"
+    (click)="ejecutarAccion()">
+
+    {{ textoBoton }}
+
+  </ion-button>
+</div>
