@@ -1,0 +1,53 @@
+.carrusel-frases {
+  min-height: 150px;
+  padding: 1.25rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(40, 24, 24, 0.65);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.contenido-frase {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease-in-out,
+    transform 0.25s ease-in-out;
+}
+
+.contenido-frase.ocultando {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.frase {
+  margin: 0;
+  line-height: 1.55;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.autor {
+  display: block;
+  text-align: right;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+@media (max-width: 700px) {
+  .carrusel-frases {
+    padding: 1rem;
+  }
+
+  .frase {
+    font-size: 0.9rem;
+  }
+
+  .autor {
+    font-size: 0.85rem;
+  }
+}

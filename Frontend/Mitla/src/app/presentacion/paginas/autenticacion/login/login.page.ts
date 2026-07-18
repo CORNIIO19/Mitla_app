@@ -21,6 +21,7 @@ import {
 
 import { AutenticarUsuarioUseCase } from '../../../../aplicacion/casos-uso/autenticar-usuario.usecase';
 import { TokenService } from '../../../../seguridad/servicios/token.service';
+import { CarruselFrasesComponent, FraseCarrusel } from 'src/app/presentacion/componentes/carrusel-frases/carrusel-frases.component';
 
 @Component({
   selector: 'app-login',
@@ -43,7 +44,8 @@ import { TokenService } from '../../../../seguridad/servicios/token.service';
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonLabel
+    IonLabel,
+    CarruselFrasesComponent
   ]
 })
 export class LoginPage {
@@ -90,4 +92,20 @@ export class LoginPage {
       }
     });
   }
+
+  frasesPrivacidad: FraseCarrusel[] = [
+      {
+        texto: 'Decir que no te importa el derecho a la privacidad porque no tienes nada que ocultar es como decir que no te importa la libertad de expresión porque no tienes nada que decir.',
+        autor: 'Edward Snowden'
+      },
+      {
+        texto: 'Tus notas, tu conocimiento y tus reglas deben permanecer bajo tu control.',
+        autor: 'Mitla'
+      },
+      {
+        texto: 'La privacidad no es un lujo, es una condición para pensar con libertad.',
+        autor: 'Mitla'
+      }
+    ];
+
 }

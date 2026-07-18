@@ -10,20 +10,15 @@
 
       <div class="auth-ilustracion">
         <img
-          src="assets/mitla/ilustracion-privacidad.png"
+          src="assets/Mitla-banner-login 2.png"
           alt="Ilustración de privacidad y conocimiento"
         >
       </div>
 
-      <article class="auth-cita">
-        <p>
-          Decir que no te importa el derecho a la privacidad porque no tienes
-          nada que ocultar es como decir que no te importa la libertad de
-          expresión porque no tienes nada que decir.
-        </p>
-
-        <strong>Edward Snowden</strong>
-      </article>
+      <app-carrusel-frases
+        [frases]="frasesPrivacidad"
+        [intervalo]="6000">
+      </app-carrusel-frases>
 
     </section>
 
