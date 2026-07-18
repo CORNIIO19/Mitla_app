@@ -1,69 +1,143 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Mitla</ion-title>
-
-    <ion-buttons slot="end">
-      <ion-button (click)="cerrarSesion()">
-        Cerrar sesión
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+ <app-barra-superior titulo="Inicio"></app-barra-superior>
 </ion-header>
 
 <ion-content class="ion-padding">
 
+  <section class="bienvenida">
+    <h1>
+      Hola, {{ usuario?.nombre || 'usuario' }}
+    </h1>
+
+    <p>
+      Este es tu espacio para organizar, consultar y construir tus bases de conocimiento.
+    </p>
+  </section>
+
+  <ion-text color="danger" *ngIf="error">
+    <p>{{ error }}</p>
+  </ion-text>
+
+  <div class="estado-carga" *ngIf="cargando">
+    <ion-spinner></ion-spinner>
+    <p>Cargando dashboard...</p>
+  </div>
+
+  <ion-grid *ngIf="!cargando">
+    <ion-row>
+
+      <ion-col size="12" size-md="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{ totalBases }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p>Bases de conocimiento</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Local</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p>Gestión privada de información</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>JWT</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p>Sesión protegida activa</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Bienvenido a Mitla</ion-card-title>
+      <ion-card-title>Accesos rápidos</ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
-      <ion-text>
-        <p>
-          Gestiona tus bases de conocimiento, organiza tus archivos académicos
-          y consulta tu información de forma local y privada.
-        </p>
+      <ion-grid>
+        <ion-row>
+
+          <ion-col size="12" size-md="6">
+            <ion-button expand="block" (click)="irABases()">
+              Bases de conocimiento
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <ion-button expand="block" fill="outline" (click)="irAChat()">
+              Chat
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <ion-button expand="block" fill="outline" (click)="irAConfiguracion()">
+              Configuración
+            </ion-button>
+          </ion-col>
+
+          <ion-col size="12" size-md="6">
+            <ion-button expand="block" fill="outline" (click)="irASincronizacion()">
+              Sincronización
+            </ion-button>
+          </ion-col>
+
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Bases recientes</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <ion-text *ngIf="bases.length === 0">
+        <p>Aún no tienes bases de conocimiento. Crea una para comenzar.</p>
       </ion-text>
-    </ion-card-content>
-  </ion-card>
 
-  <ion-card button (click)="irABases()">
-    <ion-card-header>
-      <ion-card-title>Bases de conocimiento</ion-card-title>
-    </ion-card-header>
+      <ion-list *ngIf="bases.length > 0">
+        <ion-item
+          button
+          *ngFor="let base of basesRecientes"
+          (click)="irAArchivos(base)">
 
-    <ion-card-content>
-      <p>Crea, consulta y edita tus bases de conocimiento.</p>
-    </ion-card-content>
-  </ion-card>
+          <ion-label>
+            <h2>{{ base.nombre }}</h2>
+            <p>{{ base.descripcion || 'Sin descripción' }}</p>
+          </ion-label>
 
-  <ion-card button (click)="irAChat()">
-    <ion-card-header>
-      <ion-card-title>Chat</ion-card-title>
-    </ion-card-header>
+        </ion-item>
+      </ion-list>
 
-    <ion-card-content>
-      <p>Consulta tus notas mediante lenguaje natural.</p>
-    </ion-card-content>
-  </ion-card>
+      <ion-button
+        expand="block"
+        fill="clear"
+        *ngIf="bases.length > 3"
+        (click)="irABases()">
 
-  <ion-card button (click)="irAConfiguracion()">
-    <ion-card-header>
-      <ion-card-title>Configuración</ion-card-title>
-    </ion-card-header>
+        Ver todas las bases
 
-    <ion-card-content>
-      <p>Administra preferencias, privacidad y seguridad.</p>
-    </ion-card-content>
-  </ion-card>
+      </ion-button>
 
-  <ion-card button (click)="irASincronizacion()">
-    <ion-card-header>
-      <ion-card-title>Sincronización</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <p>Gestiona sincronización y trabajo offline.</p>
     </ion-card-content>
   </ion-card>
 

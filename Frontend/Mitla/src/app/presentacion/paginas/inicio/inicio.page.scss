@@ -1,8 +1,29 @@
-ion-card {
-  cursor: pointer;
+.bienvenida {
+  margin-bottom: 1.5rem;
 }
 
-ion-card:hover {
-  transform: scale(1.01);
-  transition: transform 0.15s ease-in-out;
+.bienvenida h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.bienvenida p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.estado-carga {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+ion-card {
+  border-radius: 16px;
+}
+
+ion-card-title {
+  font-weight: 700;
 }

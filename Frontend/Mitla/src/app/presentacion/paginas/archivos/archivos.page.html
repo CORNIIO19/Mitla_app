@@ -1,12 +1,8 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/bases-conocimiento"></ion-back-button>
-    </ion-buttons>
-
-    <ion-title>Archivos de la base</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-barra-superior
+  titulo="Archivos de la base"
+  [mostrarVolver]="true"
+  defaultHref="/bases-conocimiento">
+</app-barra-superior>
 
 <ion-content class="ion-padding">
 
@@ -16,11 +12,7 @@
     </ion-card-header>
 
     <ion-card-content>
-      <input
-        type="file"
-        accept=".md"
-        (change)="seleccionarArchivo($event)"
-      />
+      <input label="Titulo" type="file" accept=".md" (change)="seleccionarArchivo($event)">
 
       <ion-text *ngIf="archivoSeleccionado">
         <p>Archivo seleccionado: {{ archivoSeleccionado.name }}</p>

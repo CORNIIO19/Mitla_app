@@ -1,14 +1,8 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Bases de conocimiento</ion-title>
-
-    <ion-buttons slot="end">
-      <ion-button (click)="cerrarSesion()">
-        Cerrar sesión
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-barra-superior
+  titulo="Bases de conocimiento"
+  [mostrarVolver]="true"
+  defaultHref="/inicio">
+</app-barra-superior>
 
 <ion-content class="ion-padding">
 

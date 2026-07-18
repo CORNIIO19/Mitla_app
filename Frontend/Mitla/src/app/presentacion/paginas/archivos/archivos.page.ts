@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { BarraSuperiorComponent } from '../../componentes/barra-superior/barra-superior.component';
 
 import {
   IonContent,
@@ -50,7 +51,8 @@ import { EliminarArchivoUseCase } from '../../../aplicacion/casos-uso/eliminar-a
     IonList,
     IonItem,
     IonLabel,
-    IonSpinner
+    IonSpinner,
+    BarraSuperiorComponent
   ]
 })
 export class ArchivosPage {
