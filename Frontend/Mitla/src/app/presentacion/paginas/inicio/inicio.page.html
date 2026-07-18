@@ -1,13 +1,70 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>inicio</ion-title>
+    <ion-title>Mitla</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarSesion()">
+        Cerrar sesión
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">inicio</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Bienvenido a Mitla</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-text>
+        <p>
+          Gestiona tus bases de conocimiento, organiza tus archivos académicos
+          y consulta tu información de forma local y privada.
+        </p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card button (click)="irABases()">
+    <ion-card-header>
+      <ion-card-title>Bases de conocimiento</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Crea, consulta y edita tus bases de conocimiento.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card button (click)="irAChat()">
+    <ion-card-header>
+      <ion-card-title>Chat</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Consulta tus notas mediante lenguaje natural.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card button (click)="irAConfiguracion()">
+    <ion-card-header>
+      <ion-card-title>Configuración</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Administra preferencias, privacidad y seguridad.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card button (click)="irASincronizacion()">
+    <ion-card-header>
+      <ion-card-title>Sincronización</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Gestiona sincronización y trabajo offline.</p>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

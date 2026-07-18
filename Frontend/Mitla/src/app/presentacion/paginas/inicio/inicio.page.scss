@@ -1,0 +1,8 @@
+ion-card {
+  cursor: pointer;
+}
+
+ion-card:hover {
+  transform: scale(1.01);
+  transition: transform 0.15s ease-in-out;
+}

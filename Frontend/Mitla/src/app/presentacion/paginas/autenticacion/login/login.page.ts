@@ -80,7 +80,7 @@ export class LoginPage {
         this.cargando = false;
 
         // this.router.navigate(['/inicio']);
-        this.router.navigate(['/bases-conocimiento']);
+        this.router.navigate(['/inicio']);
       },
       error: (error) => {
         console.error(error);
