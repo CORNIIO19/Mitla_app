@@ -1,6 +1,9 @@
 .estado-vacio {
   text-align: center;
-  padding: 1.5rem 1rem;
+  padding: 2rem 1rem;
+  border: 1px dashed var(--mitla-border-color);
+  border-radius: var(--mitla-radius);
+  background: rgba(255, 255, 255, 0.6);
 }
 
 .estado-vacio h3 {
@@ -10,5 +13,5 @@
 
 .estado-vacio p {
   margin-bottom: 1rem;
-  opacity: 0.75;
+  color: var(--mitla-text-muted);
 }

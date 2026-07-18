@@ -1,2 +1,28 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+:root {
+    --ion-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    --ion-color-primary: #2f5aff;
+    --ion-color-primary-rgb: 47, 90, 255;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #294fe0;
+    --ion-color-primary-tint: #446bff;
+
+    --ion-color-secondary: #00a896;
+    --ion-color-secondary-rgb: 0, 168, 150;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #009484;
+    --ion-color-secondary-tint: #1aB1a1;
+
+    --ion-background-color: #f5f7fb;
+    --ion-text-color: #162033;
+
+    --mitla-card-bg: #ffffff;
+    --mitla-border-color: #e4e8f0;
+    --mitla-text-muted: #6b7280;
+    --mitla-radius: 18px;
+    --mitla-shadow: 0 10px 30px rgba(22, 32, 51, 0.08);
+}

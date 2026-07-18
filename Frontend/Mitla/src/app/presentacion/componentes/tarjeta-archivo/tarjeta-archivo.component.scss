@@ -1,19 +1,21 @@
 .tarjeta-archivo {
-  border-radius: 16px;
+  border-radius: var(--mitla-radius);
   cursor: pointer;
-  transition: transform 0.15s ease-in-out;
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  min-height: 180px;
 }
 
 .tarjeta-archivo:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .nombre-archivo {
   margin-bottom: 0.75rem;
+  color: var(--ion-text-color);
 }
 
 .metadata {
   font-size: 0.8rem;
-  opacity: 0.65;
+  color: var(--mitla-text-muted);
   margin-bottom: 0.4rem;
 }
