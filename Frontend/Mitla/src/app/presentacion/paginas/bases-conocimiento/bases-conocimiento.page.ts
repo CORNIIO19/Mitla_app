@@ -29,6 +29,7 @@ import { ListarBasesUseCase } from '../../../aplicacion/casos-uso/listar-bases.u
 import { CrearBaseUseCase } from '../../../aplicacion/casos-uso/crear-base.usecase';
 import { ActualizarBaseUseCase } from '../../../aplicacion/casos-uso/actualizar-base.usecase';
 import { TokenService } from '../../../seguridad/servicios/token.service';
+import { TarjetaBaseComponent } from '../../componentes/tarjeta-base/tarjeta-base.component';
 
 @Component({
   selector: 'app-bases-conocimiento',
@@ -40,9 +41,9 @@ import { TokenService } from '../../../seguridad/servicios/token.service';
     FormsModule,
     RouterModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
+    // IonHeader,
+    // IonTitle,
+    // IonToolbar,
     IonCard,
     IonCardHeader,
     IonCardTitle,
@@ -55,8 +56,9 @@ import { TokenService } from '../../../seguridad/servicios/token.service';
     IonLabel,
     IonText,
     IonSpinner,
-    IonButtons,
-    BarraSuperiorComponent
+    // IonButtons,
+    BarraSuperiorComponent,
+    TarjetaBaseComponent
   ]
 })
 export class BasesConocimientoPage {
@@ -136,16 +138,14 @@ export class BasesConocimientoPage {
     });
   }
 
-  iniciarEdicion(base: BaseConocimiento, event: Event): void {
-    event.stopPropagation();
+iniciarEdicion(base: BaseConocimiento): void {
+  this.idBaseEditando = base.id_base;
+  this.nombre = base.nombre;
+  this.descripcion = base.descripcion || '';
 
-    this.idBaseEditando = base.id_base;
-    this.nombre = base.nombre;
-    this.descripcion = base.descripcion || '';
-
-    this.error = '';
-    this.mensaje = '';
-  }
+  this.error = '';
+  this.mensaje = '';
+}
 
   guardarCambios(): void {
     this.error = '';

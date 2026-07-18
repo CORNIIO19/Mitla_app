@@ -1,0 +1,19 @@
+.tarjeta-base {
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.15s ease-in-out;
+}
+
+.tarjeta-base:hover {
+  transform: translateY(-2px);
+}
+
+.descripcion {
+  margin-bottom: 0.75rem;
+}
+
+.metadata {
+  font-size: 0.8rem;
+  opacity: 0.65;
+  margin-bottom: 0.5rem;
+}

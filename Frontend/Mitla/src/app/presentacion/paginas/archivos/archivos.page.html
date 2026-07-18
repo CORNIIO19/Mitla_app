@@ -12,7 +12,18 @@
     </ion-card-header>
 
     <ion-card-content>
-      <input label="Titulo" type="file" accept=".md" (change)="seleccionarArchivo($event)">
+      <label for="archivo-markdown" class="etiqueta-archivo">
+        Selecciona un archivo Markdown
+      </label>
+
+      <input
+        id="archivo-markdown"
+        type="file"
+        accept=".md"
+        title="Selecciona un archivo Markdown"
+        aria-label="Selecciona un archivo Markdown"
+        (change)="seleccionarArchivo($event)"
+      >
 
       <ion-text *ngIf="archivoSeleccionado">
         <p>Archivo seleccionado: {{ archivoSeleccionado.name }}</p>

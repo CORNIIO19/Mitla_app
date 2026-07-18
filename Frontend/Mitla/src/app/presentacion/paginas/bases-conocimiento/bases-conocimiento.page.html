@@ -91,32 +91,16 @@
         <p>Aún no tienes bases de conocimiento.</p>
       </ion-text>
 
-      <ion-list *ngIf="bases.length > 0">
+      <div class="contenedor-bases" *ngIf="bases.length > 0">
 
-        <ion-item
-          button
+        <app-tarjeta-base
           *ngFor="let base of bases"
-          (click)="abrirBase(base)">
+          [base]="base"
+          (abrir)="abrirBase($event)"
+          (editar)="iniciarEdicion( $event)">
+        </app-tarjeta-base>
 
-          <ion-label>
-            <h2>{{ base.nombre }}</h2>
-            <p>{{ base.descripcion || 'Sin descripción' }}</p>
-            <p>ID: {{ base.id_base }}</p>
-          </ion-label>
-
-          <ion-button
-            slot="end"
-            fill="clear"
-            color="primary"
-            (click)="iniciarEdicion(base, $event)">
-
-            Editar
-
-          </ion-button>
-
-        </ion-item>
-
-      </ion-list>
+      </div>
 
     </ion-card-content>
   </ion-card>
