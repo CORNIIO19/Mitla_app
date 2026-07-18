@@ -27,7 +27,7 @@ import { ListarArchivosUseCase } from '../../../aplicacion/casos-uso/listar-arch
 import { SubirArchivoUseCase } from '../../../aplicacion/casos-uso/subir-archivo.usecase';
 import { ObtenerArchivoUseCase } from '../../../aplicacion/casos-uso/obtener-archivo.usecase';
 import { EliminarArchivoUseCase } from '../../../aplicacion/casos-uso/eliminar-archivo.usecase';
-
+import { TarjetaArchivoComponent } from '../../componentes/tarjeta-archivo/tarjeta-archivo.component';
 @Component({
   selector: 'app-archivos',
   templateUrl: './archivos.page.html',
@@ -37,11 +37,11 @@ import { EliminarArchivoUseCase } from '../../../aplicacion/casos-uso/eliminar-a
     CommonModule,
     RouterModule,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonButtons,
-    IonBackButton,
+    // IonHeader,
+    // IonTitle,
+    // IonToolbar,
+    // IonButtons,
+    // IonBackButton,
     IonCard,
     IonCardHeader,
     IonCardTitle,
@@ -52,7 +52,8 @@ import { EliminarArchivoUseCase } from '../../../aplicacion/casos-uso/eliminar-a
     IonItem,
     IonLabel,
     IonSpinner,
-    BarraSuperiorComponent
+    BarraSuperiorComponent,
+    TarjetaArchivoComponent
   ]
 })
 export class ArchivosPage {
@@ -162,25 +163,23 @@ export class ArchivosPage {
     });
   }
 
-  eliminarArchivo(archivo: Archivo, event: Event): void {
-    event.stopPropagation();
+eliminarArchivo(archivo: Archivo): void {
+  const confirmar = confirm(`¿Eliminar el archivo "${archivo.nombre_archivo}"?`);
 
-    const confirmar = confirm(`¿Eliminar el archivo "${archivo.nombre_archivo}"?`);
-
-    if (!confirmar) {
-      return;
-    }
-
-    this.eliminarArchivoUseCase.ejecutar(archivo.id_archivo).subscribe({
-      next: () => {
-        this.mensaje = 'Archivo eliminado correctamente.';
-        this.archivoAbierto = null;
-        this.cargarArchivos();
-      },
-      error: (error) => {
-        console.error(error);
-        this.error = 'No se pudo eliminar el archivo.';
-      }
-    });
+  if (!confirmar) {
+    return;
   }
+
+  this.eliminarArchivoUseCase.ejecutar(archivo.id_archivo).subscribe({
+    next: () => {
+      this.mensaje = 'Archivo eliminado correctamente.';
+      this.archivoAbierto = null;
+      this.cargarArchivos();
+    },
+    error: (error) => {
+      console.error(error);
+      this.error = 'No se pudo eliminar el archivo.';
+    }
+  });
+}
 }

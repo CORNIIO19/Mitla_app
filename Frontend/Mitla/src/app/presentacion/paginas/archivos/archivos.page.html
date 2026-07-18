@@ -65,29 +65,16 @@
         <p>Esta base todavía no tiene archivos.</p>
       </ion-text>
 
-      <ion-list *ngIf="archivos.length > 0">
-        <ion-item
-          button
+      <div class="contenedor-archivos" *ngIf="archivos.length > 0">
+
+        <app-tarjeta-archivo
           *ngFor="let archivo of archivos"
-          (click)="abrirArchivo(archivo)">
+          [archivo]="archivo"
+          (abrir)="abrirArchivo($event)"
+          (eliminar)="eliminarArchivo($event)">
+        </app-tarjeta-archivo>
 
-          <ion-label>
-            <h2>{{ archivo.titulo }}</h2>
-            <p>{{ archivo.nombre_archivo }}</p>
-            <p>Extensión: {{ archivo.extension }}</p>
-          </ion-label>
-
-          <ion-button
-            color="danger"
-            slot="end"
-            (click)="eliminarArchivo(archivo, $event)">
-
-            Eliminar
-
-          </ion-button>
-        </ion-item>
-      </ion-list>
-
+      </div>
     </ion-card-content>
   </ion-card>
 

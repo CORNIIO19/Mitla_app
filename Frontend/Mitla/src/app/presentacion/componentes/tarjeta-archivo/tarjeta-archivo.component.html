@@ -1,3 +1,37 @@
-<p>
-  tarjeta-archivo works!
-</p>
+<ion-card button class="tarjeta-archivo" (click)="abrirArchivo()">
+
+  <ion-card-header>
+    <ion-card-title>
+      {{ archivo.titulo }}
+    </ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+
+    <ion-text>
+      <p class="nombre-archivo">
+        {{ archivo.nombre_archivo }}
+      </p>
+    </ion-text>
+
+    <p class="metadata">
+      Extensión: {{ archivo.extension }}
+    </p>
+
+    <p class="metadata" *ngIf="archivo.fecha_subida">
+      Subido: {{ archivo.fecha_subida }}
+    </p>
+
+    <ion-button
+      fill="clear"
+      size="small"
+      color="danger"
+      (click)="eliminarArchivo($event)">
+
+      Eliminar
+
+    </ion-button>
+
+  </ion-card-content>
+
+</ion-card>

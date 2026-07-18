@@ -1,0 +1,19 @@
+.tarjeta-archivo {
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.15s ease-in-out;
+}
+
+.tarjeta-archivo:hover {
+  transform: translateY(-2px);
+}
+
+.nombre-archivo {
+  margin-bottom: 0.75rem;
+}
+
+.metadata {
+  font-size: 0.8rem;
+  opacity: 0.65;
+  margin-bottom: 0.4rem;
+}
