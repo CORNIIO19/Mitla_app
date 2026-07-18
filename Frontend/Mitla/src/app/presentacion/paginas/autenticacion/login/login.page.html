@@ -1,60 +1,106 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Mitla</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content fullscreen>
 
-<ion-content class="ion-padding">
+  <main class="auth-layout">
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Iniciar sesión</ion-card-title>
-    </ion-card-header>
+    <section class="auth-panel auth-panel-info">
 
-    <ion-card-content>
+      <h1 class="auth-frase">
+        Tus notas, tu conocimiento, tus reglas. 100% privado.
+      </h1>
 
-      <ion-item>
-        <ion-label position="stacked">Correo electrónico</ion-label>
-        <ion-input
-          type="email"
-          [(ngModel)]="email"
-          placeholder="correo@ejemplo.com">
-        </ion-input>
-      </ion-item>
+      <div class="auth-ilustracion">
+        <img
+          src="assets/mitla/ilustracion-privacidad.png"
+          alt="Ilustración de privacidad y conocimiento"
+        >
+      </div>
 
-      <ion-item>
-        <ion-label position="stacked">Contraseña</ion-label>
-        <ion-input
-          type="password"
-          [(ngModel)]="password"
-          placeholder="Tu contraseña">
-        </ion-input>
-      </ion-item>
+      <article class="auth-cita">
+        <p>
+          Decir que no te importa el derecho a la privacidad porque no tienes
+          nada que ocultar es como decir que no te importa la libertad de
+          expresión porque no tienes nada que decir.
+        </p>
 
-      <ion-button
-        expand="block"
-        class="ion-margin-top"
-        (click)="iniciarSesion()"
-        [disabled]="cargando">
+        <strong>Edward Snowden</strong>
+      </article>
 
-        {{ cargando ? 'Iniciando sesión...' : 'Entrar' }}
+    </section>
 
-      </ion-button>
+    <section class="auth-panel auth-panel-formulario">
 
-      <ion-text color="danger" *ngIf="error">
-        <p>{{ error }}</p>
-      </ion-text>
+      <div class="auth-formulario">
 
-      <ion-button
-        expand="block"
-        fill="clear"
-        routerLink="/registro">
+        <header class="auth-header">
+          <h2>MITLA</h2>
+          <p>BIENVENIDO DE NUEVO</p>
+        </header>
 
-        Crear cuenta
+        <div class="auth-campo">
+          <ion-label>Usuario</ion-label>
 
-      </ion-button>
+          <ion-item lines="none">
+            <ion-input
+              type="email"
+              [(ngModel)]="email"
+              placeholder="Ingresa tu correo">
+            </ion-input>
+          </ion-item>
+        </div>
 
-    </ion-card-content>
-  </ion-card>
+        <div class="auth-campo">
+          <ion-label>Contraseña</ion-label>
+
+          <ion-item lines="none">
+            <ion-input
+              type="password"
+              [(ngModel)]="password"
+              placeholder="Ingresa tu contraseña">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button
+          expand="block"
+          class="auth-boton-principal"
+          (click)="iniciarSesion()"
+          [disabled]="cargando">
+
+          {{ cargando ? 'Iniciando sesión...' : 'Inicia sesión' }}
+
+        </ion-button>
+
+        <ion-text color="danger" *ngIf="error">
+          <p class="auth-error">{{ error }}</p>
+        </ion-text>
+
+        <div class="auth-separador">
+          <span>O inicia sesión con</span>
+        </div>
+
+        <div class="auth-social">
+          <button type="button" aria-label="Iniciar sesión con Google">
+            <img src="assets/mitla/google.svg" alt="">
+          </button>
+
+          <button type="button" aria-label="Iniciar sesión con GitHub">
+            <img src="assets/mitla/github.svg" alt="">
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="auth-link"
+          routerLink="/registro">
+
+          ¿No tienes cuenta? Crea una nueva
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
 
 </ion-content>

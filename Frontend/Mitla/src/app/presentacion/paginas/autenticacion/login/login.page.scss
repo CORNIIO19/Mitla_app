@@ -1,0 +1,217 @@
+ion-content {
+  --background: #050000;
+}
+
+.auth-layout {
+  min-height: 100vh;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.45)),
+    url('/assets/2026-06-01T06-19-03.png');
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  font-family: var(--ion-font-family);
+}
+
+.auth-panel {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(20, 12, 12, 0.78);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.auth-panel-info {
+  display: none;
+}
+
+.auth-panel-formulario {
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-formulario {
+  width: 100%;
+  max-width: 470px;
+}
+
+.auth-header {
+  margin-bottom: 2.5rem;
+}
+
+.auth-header h2 {
+  margin: 0;
+  font-size: clamp(3.2rem, 7vw, 5rem);
+  line-height: 0.9;
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.auth-header p {
+  margin: 1rem 0 0;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.auth-campo {
+  margin-bottom: 1.25rem;
+}
+
+.auth-campo ion-label {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: #ffffff;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.auth-campo ion-item {
+  --background: rgba(18, 12, 12, 0.72);
+  --border-radius: 8px;
+  --padding-start: 1rem;
+  --inner-padding-end: 1rem;
+  --min-height: 64px;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+}
+
+.auth-campo ion-input {
+  --color: #ffffff;
+  --placeholder-color: rgba(255, 255, 255, 0.75);
+  --placeholder-opacity: 1;
+  font-weight: 700;
+}
+
+.auth-boton-principal {
+  margin-top: 1.25rem;
+  height: 58px;
+  --border-radius: 8px;
+  --background: #f4eff8;
+  --background-hover: #ffffff;
+  --color: #20191d;
+  font-size: 1.2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.auth-error {
+  margin-top: 1rem;
+  font-weight: 700;
+}
+
+.auth-separador {
+  margin: 2rem 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.auth-separador::before,
+.auth-separador::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.auth-social {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.auth-social button {
+  height: 54px;
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+  background: rgba(18, 12, 12, 0.45);
+  cursor: pointer;
+}
+
+.auth-social img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.auth-link {
+  width: 100%;
+  margin-top: 1.5rem;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (min-width: 900px) {
+  .auth-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .auth-panel-info {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 4rem);
+    padding: 2rem;
+  }
+
+  .auth-frase {
+    margin: 0;
+    max-width: 650px;
+    font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+    line-height: 1.35;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .auth-ilustracion {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .auth-ilustracion img {
+    width: min(78%, 520px);
+    max-height: 460px;
+    object-fit: contain;
+  }
+
+  .auth-cita {
+    padding: 1.25rem;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(40, 24, 24, 0.65);
+  }
+
+  .auth-cita p {
+    margin: 0 0 1rem;
+    line-height: 1.55;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .auth-cita strong {
+    display: block;
+    text-align: right;
+    text-transform: uppercase;
+  }
+}
