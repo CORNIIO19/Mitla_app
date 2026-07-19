@@ -20,6 +20,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { RegistrarUsuarioUseCase } from '../../../../aplicacion/casos-uso/registrar-usuario.usecase';
+import { CarruselFrasesComponent, FraseCarrusel } from 'src/app/presentacion/componentes/carrusel-frases/carrusel-frases.component';
 
 @Component({
   selector: 'app-registro',
@@ -42,7 +43,8 @@ import { RegistrarUsuarioUseCase } from '../../../../aplicacion/casos-uso/regist
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonLabel
+    IonLabel,
+    CarruselFrasesComponent
   ]
 })
 export class RegistroPage {
@@ -114,4 +116,19 @@ export class RegistroPage {
       }
     });
   }
+
+  frasesPrivacidad: FraseCarrusel[] = [
+  {
+    texto: 'Tus notas, tu conocimiento y tus ideas deben estar bajo tus propias reglas.',
+    autor: 'Mitla'
+  },
+  {
+    texto: 'Un buen sistema no solo organiza información, también respeta a quien la crea.',
+    autor: 'Mitla'
+  },
+  {
+    texto: 'Tu conocimiento también merece un lugar seguro, privado y siempre disponible.',
+    autor: 'Mitla'
+  }
+];
 }

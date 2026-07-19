@@ -1,91 +1,127 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Mitla</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content fullscreen>
 
-<ion-content class="ion-padding">
+  <main class="auth-layout">
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Crear cuenta</ion-card-title>
-    </ion-card-header>
+    <section class="auth-panel auth-panel-info">
 
-    <ion-card-content>
+      <h1 class="auth-frase">
+        Crea tu espacio privado para organizar y consultar tu conocimiento.
+      </h1>
 
-      <ion-item>
-        <ion-label position="stacked">Nombre</ion-label>
-        <ion-input
-          type="text"
-          [(ngModel)]="nombre"
-          placeholder="Tu nombre">
-        </ion-input>
-      </ion-item>
+      <div class="auth-ilustracion">
+        <img
+          src="assets/Mitla-banner-login 2.png"
+          alt="Ilustración de privacidad y conocimiento"
+        >
+      </div>
 
-      <ion-item>
-        <ion-label position="stacked">Correo electrónico</ion-label>
-        <ion-input
-          type="email"
-          [(ngModel)]="email"
-          placeholder="correo@ejemplo.com">
-        </ion-input>
-      </ion-item>
+      <app-carrusel-frases
+        [frases]="frasesPrivacidad"
+        [intervalo]="6000">
+      </app-carrusel-frases>
 
-      <ion-item>
-        <ion-label position="stacked">Teléfono</ion-label>
-        <ion-input
-          type="tel"
-          [(ngModel)]="telefono"
-          placeholder="Tu número de teléfono">
-        </ion-input>
-      </ion-item>
+    </section>
 
-      <ion-item>
-        <ion-label position="stacked">Contraseña</ion-label>
-        <ion-input
-          type="password"
-          [(ngModel)]="password"
-          placeholder="Crea una contraseña">
-        </ion-input>
-      </ion-item>
+    <section class="auth-panel auth-panel-formulario">
 
-      <ion-item>
-        <ion-label position="stacked">Confirmar contraseña</ion-label>
-        <ion-input
-          type="password"
-          [(ngModel)]="confirmarPassword"
-          placeholder="Repite tu contraseña">
-        </ion-input>
-      </ion-item>
+      <div class="auth-formulario">
 
-      <ion-button
-        expand="block"
-        class="ion-margin-top"
-        (click)="registrar()"
-        [disabled]="cargando">
+        <header class="auth-header">
+          <h2>MITLA</h2>
+          <p>CREA TU CUENTA</p>
+        </header>
 
-        {{ cargando ? 'Creando cuenta...' : 'Crear cuenta' }}
+        <div class="auth-campo">
+          <ion-label>Nombre</ion-label>
 
-      </ion-button>
+          <ion-item lines="none">
+            <ion-input
+              type="text"
+              [(ngModel)]="nombre"
+              placeholder="Ingresa tu nombre">
+            </ion-input>
+          </ion-item>
+        </div>
 
-      <ion-text color="success" *ngIf="mensaje">
-        <p>{{ mensaje }}</p>
-      </ion-text>
+        <div class="auth-campo">
+          <ion-label>Correo electrónico</ion-label>
 
-      <ion-text color="danger" *ngIf="error">
-        <p>{{ error }}</p>
-      </ion-text>
+          <ion-item lines="none">
+            <ion-input
+              type="email"
+              [(ngModel)]="email"
+              placeholder="correo@ejemplo.com">
+            </ion-input>
+          </ion-item>
+        </div>
 
-      <ion-button
-        expand="block"
-        fill="clear"
-        routerLink="/login">
+        <div class="auth-campo">
+          <ion-label>Teléfono</ion-label>
 
-        Ya tengo cuenta
+          <ion-item lines="none">
+            <ion-input
+              type="tel"
+              [(ngModel)]="telefono"
+              placeholder="Ingresa tu teléfono">
+            </ion-input>
+          </ion-item>
+        </div>
 
-      </ion-button>
+        <div class="auth-campo">
+          <ion-label>Contraseña</ion-label>
 
-    </ion-card-content>
-  </ion-card>
+          <ion-item lines="none">
+            <ion-input
+              type="password"
+              [(ngModel)]="password"
+              placeholder="Crea una contraseña">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="auth-campo">
+          <ion-label>Confirmar contraseña</ion-label>
+
+          <ion-item lines="none">
+            <ion-input
+              type="password"
+              [(ngModel)]="confirmarPassword"
+              placeholder="Repite tu contraseña">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button
+          expand="block"
+          class="auth-boton-principal"
+          (click)="registrar()"
+          [disabled]="cargando">
+
+          {{ cargando ? 'Creando cuenta...' : 'Crear cuenta' }}
+
+        </ion-button>
+
+        <ion-text color="success" *ngIf="mensaje">
+          <p class="auth-mensaje">{{ mensaje }}</p>
+        </ion-text>
+
+        <ion-text color="danger" *ngIf="error">
+          <p class="auth-error">{{ error }}</p>
+        </ion-text>
+
+        <button
+          type="button"
+          class="auth-link"
+          routerLink="/login">
+
+          ¿Ya tienes cuenta? Inicia sesión
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
 
 </ion-content>

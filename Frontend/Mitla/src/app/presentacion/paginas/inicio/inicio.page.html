@@ -1,145 +1,245 @@
-<ion-header>
- <app-barra-superior titulo="Inicio"></app-barra-superior>
-</ion-header>
+<ion-content fullscreen>
 
-<ion-content class="ion-padding">
-  <div class="page-container">
+  <main class="dashboard-shell">
 
-  <section class="bienvenida">
-    <h1>
-      Hola, {{ usuario?.nombre || 'usuario' }}
-    </h1>
+    <aside class="dashboard-sidebar">
 
-    <p>
-      Este es tu espacio para organizar, consultar y construir tus bases de conocimiento.
-    </p>
+      <div class="sidebar-brand">
+        <h1>MITLA</h1>
+        <p>Conocimiento local y privado</p>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Navegación principal">
+
+        <button type="button" class="nav-item activo" (click)="irAInicio()">
+          Inicio
+        </button>
+
+        <button type="button" class="nav-item" (click)="irABases()">
+          Bases de conocimiento
+        </button>
+
+        <button type="button" class="nav-item" (click)="irAChat()">
+          Chat
+        </button>
+
+        <button type="button" class="nav-item" (click)="irAConfiguracion()">
+          Configuración
+        </button>
+
+        <button type="button" class="nav-item" (click)="irASincronizacion()">
+          Sincronización
+        </button>
+
+      </nav>
+
+      <section class="historial-panel">
+
+        <div class="historial-header">
+          <h2>Historial</h2>
+          <span>{{ conversacionesFiltradas.length }}</span>
+        </div>
+
+        <div class="historial-lista">
+
+          <button
+            type="button"
+            class="historial-item"
+            *ngFor="let conversacion of conversacionesFiltradas"
+            (click)="abrirConversacion(conversacion)">
+
+            <strong>{{ conversacion.titulo }}</strong>
+            <span>{{ conversacion.base }}</span>
+            <small>{{ conversacion.fecha }}</small>
+
+          </button>
+
+        </div>
+
+      </section>
+
+    </aside>
+
+    <section class="dashboard-main">
+
+      <header class="dashboard-topbar">
+
+        <label class="busqueda-global">
+          <span>Buscar</span>
+
+          <input
+            type="search"
+            [(ngModel)]="busqueda"
+            placeholder="Buscar conversaciones, bases o temas..."
+            title="Buscar en Mitla"
+            aria-label="Buscar en Mitla"
+          >
+        </label>
+
+        <div class="topbar-actions">
+
+          <button type="button" class="topbar-button">
+            Opciones
+          </button>
+
+          <div class="perfil-usuario">
+            <div class="avatar-usuario">
+              {{ inicialUsuario }}
+            </div>
+
+            <div>
+              <strong>{{ usuario?.nombre || 'Usuario' }}</strong>
+              <span>{{ usuario?.email || 'Sesión activa' }}</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="topbar-button cerrar"
+            (click)="cerrarSesion()">
+
+            Cerrar sesión
+
+          </button>
+
+        </div>
+
+      </header>
+
+      <section class="dashboard-body">
+
+  <app-mensaje-alerta
+    *ngIf="error"
+    tipo="danger"
+    [mensaje]="error">
+  </app-mensaje-alerta>
+
+  <app-estado-carga
+    *ngIf="cargando"
+    mensaje="Cargando dashboard...">
+  </app-estado-carga>
+
+  <section
+    class="chat-layout"
+    [class.chat-layout-inicial]="!chatIniciado"
+    [class.chat-layout-conversacion]="chatIniciado"
+    *ngIf="!cargando">
+
+    <!-- MODO INICIAL -->
+    <ng-container *ngIf="!chatIniciado">
+
+      <section class="chat-inicial">
+
+        <h2>
+          Buenos días, {{ usuario?.nombre || '@Usuario' }}
+        </h2>
+
+        <section class="chat-input-inicial">
+
+          <div class="chat-input-box-inicial">
+
+            <textarea
+              id="pregunta-chat-inicial"
+              [(ngModel)]="pregunta"
+              placeholder="¿Qué deseas consultar hoy?"
+              title="Pregunta para Mitla"
+              aria-label="Pregunta para Mitla">
+            </textarea>
+
+            <div class="input-footer">
+
+              <span>
+                Sonnet 4.0 Bajo
+              </span>
+
+              <button
+                type="button"
+                (click)="enviarPregunta()"
+                [disabled]="!pregunta.trim()"
+                aria-label="Enviar pregunta">
+
+                ↑
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </section>
+
+    </ng-container>
+
+    <!-- MODO CHAT ACTIVO -->
+    <ng-container *ngIf="chatIniciado">
+
+      <section class="chat-activo" aria-label="Conversación con Mitla">
+
+        <div class="chat-thread">
+
+          <article
+            class="mensaje"
+            *ngFor="let mensaje of mensajesChat"
+            [class.mensaje-usuario]="mensaje.rol === 'usuario'"
+            [class.mensaje-asistente]="mensaje.rol === 'asistente'">
+
+            <div class="mensaje-avatar">
+              {{ mensaje.rol === 'usuario' ? inicialUsuario : 'M' }}
+            </div>
+
+            <div class="mensaje-cuerpo">
+
+              <div class="mensaje-autor">
+                {{ mensaje.rol === 'usuario' ? 'Tú' : 'Mitla' }}
+              </div>
+
+              <div class="mensaje-contenido">
+                <p>{{ mensaje.contenido }}</p>
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+      <section class="chat-input-panel chat-input-panel-activo">
+
+        <div class="chat-input-box">
+
+          <textarea
+            id="pregunta-chat"
+            [(ngModel)]="pregunta"
+            placeholder="Pregunta algo sobre tus bases de conocimiento..."
+            title="Pregunta para Mitla"
+            aria-label="Pregunta para Mitla">
+          </textarea>
+
+          <button
+            type="button"
+            (click)="enviarPregunta()"
+            [disabled]="!pregunta.trim()">
+
+            Enviar
+
+          </button>
+
+        </div>
+
+      </section>
+
+    </ng-container>
+
   </section>
 
-  <ion-text color="danger" *ngIf="error">
-    <p>{{ error }}</p>
-  </ion-text>
+</section>
 
-  <div class="estado-carga" *ngIf="cargando">
-    <ion-spinner></ion-spinner>
-    <p>Cargando dashboard...</p>
-  </div>
+    </section>
 
-  <ion-grid *ngIf="!cargando">
-    <ion-row>
+  </main>
 
-      <ion-col size="12" size-md="4">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>{{ totalBases }}</ion-card-title>
-          </ion-card-header>
-
-          <ion-card-content>
-            <p>Bases de conocimiento</p>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-md="4">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Local</ion-card-title>
-          </ion-card-header>
-
-          <ion-card-content>
-            <p>Gestión privada de información</p>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-md="4">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>JWT</ion-card-title>
-          </ion-card-header>
-
-          <ion-card-content>
-            <p>Sesión protegida activa</p>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-    </ion-row>
-  </ion-grid>
-
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Accesos rápidos</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-grid>
-        <ion-row>
-
-          <ion-col size="12" size-md="6">
-            <ion-button expand="block" (click)="irABases()">
-              Bases de conocimiento
-            </ion-button>
-          </ion-col>
-
-          <ion-col size="12" size-md="6">
-            <ion-button expand="block" fill="outline" (click)="irAChat()">
-              Chat
-            </ion-button>
-          </ion-col>
-
-          <ion-col size="12" size-md="6">
-            <ion-button expand="block" fill="outline" (click)="irAConfiguracion()">
-              Configuración
-            </ion-button>
-          </ion-col>
-
-          <ion-col size="12" size-md="6">
-            <ion-button expand="block" fill="outline" (click)="irASincronizacion()">
-              Sincronización
-            </ion-button>
-          </ion-col>
-
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Bases recientes</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-
-      <ion-text *ngIf="bases.length === 0">
-        <p>Aún no tienes bases de conocimiento. Crea una para comenzar.</p>
-      </ion-text>
-
-      <ion-list *ngIf="bases.length > 0">
-        <ion-item
-          button
-          *ngFor="let base of basesRecientes"
-          (click)="irAArchivos(base)">
-
-          <ion-label>
-            <h2>{{ base.nombre }}</h2>
-            <p>{{ base.descripcion || 'Sin descripción' }}</p>
-          </ion-label>
-
-        </ion-item>
-      </ion-list>
-
-      <ion-button
-        expand="block"
-        fill="clear"
-        *ngIf="bases.length > 3"
-        (click)="irABases()">
-
-        Ver todas las bases
-
-      </ion-button>
-
-    </ion-card-content>
-  </ion-card>
-  </div>
 </ion-content>
