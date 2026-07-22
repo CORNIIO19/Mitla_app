@@ -1,0 +1,101 @@
+<ion-content fullscreen>
+
+  <main class="auth-layout">
+
+    <section class="auth-panel auth-panel-info">
+
+      <h1 class="auth-frase">
+        Tus notas, tu conocimiento, tus reglas. 100% privado.
+      </h1>
+
+      <div class="auth-ilustracion">
+        <img
+          src="assets/Mitla-banner-login 2.png"
+          alt="Ilustración de privacidad y conocimiento"
+        >
+      </div>
+
+      <app-carrusel-frases
+        [frases]="frasesPrivacidad"
+        [intervalo]="6000">
+      </app-carrusel-frases>
+
+    </section>
+
+    <section class="auth-panel auth-panel-formulario">
+
+      <div class="auth-formulario">
+
+        <header class="auth-header">
+          <h2>MITLA</h2>
+          <p>BIENVENIDO DE NUEVO</p>
+        </header>
+
+        <div class="auth-campo">
+          <ion-label>Usuario</ion-label>
+
+          <ion-item lines="none">
+            <ion-input
+              type="email"
+              [(ngModel)]="email"
+              placeholder="Ingresa tu correo">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div class="auth-campo">
+          <ion-label>Contraseña</ion-label>
+
+          <ion-item lines="none">
+            <ion-input
+              type="password"
+              [(ngModel)]="password"
+              placeholder="Ingresa tu contraseña">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button
+          expand="block"
+          class="auth-boton-principal"
+          (click)="iniciarSesion()"
+          [disabled]="cargando">
+
+          {{ cargando ? 'Iniciando sesión...' : 'Inicia sesión' }}
+
+        </ion-button>
+
+        <ion-text color="danger" *ngIf="error">
+          <p class="auth-error">{{ error }}</p>
+        </ion-text>
+
+        <div class="auth-separador">
+          <span>O inicia sesión con</span>
+        </div>
+
+        <div class="auth-social">
+          <button type="button" aria-label="Iniciar sesión con Google">
+            <img src="assets/mitla/google.svg" alt="">
+          </button>
+
+          <button type="button" aria-label="Iniciar sesión con GitHub">
+            <img src="assets/mitla/github.svg" alt="">
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="auth-link"
+          routerLink="/registro">
+
+          ¿No tienes cuenta? Crea una nueva
+
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</ion-content>

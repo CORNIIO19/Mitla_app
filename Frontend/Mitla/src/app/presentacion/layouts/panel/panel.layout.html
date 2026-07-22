@@ -1,0 +1,26 @@
+<div class="dashboard-shell">
+
+  <aside
+    class="dashboard-sidebar"
+    aria-label="Navegación principal">
+
+    <app-barra-lateral></app-barra-lateral>
+
+  </aside>
+
+  <section class="dashboard-main">
+
+    <app-barra-superior
+      [titulo]="tituloActual"
+      [mostrarVolver]="mostrarVolver"
+      [rutaVolver]="rutaVolver"
+      [mostrarCerrarSesion]="true">
+    </app-barra-superior>
+
+    <main class="dashboard-body">
+      <router-outlet></router-outlet>
+    </main>
+
+  </section>
+
+</div>

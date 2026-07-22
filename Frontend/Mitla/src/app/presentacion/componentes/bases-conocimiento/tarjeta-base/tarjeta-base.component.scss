@@ -1,0 +1,21 @@
+.tarjeta-base {
+  border-radius: var(--mitla-radius);
+  cursor: pointer;
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  min-height: 180px;
+}
+
+.tarjeta-base:hover {
+  transform: translateY(-3px);
+}
+
+.descripcion {
+  margin-bottom: 0.75rem;
+  color: var(--mitla-text-muted);
+}
+
+.metadata {
+  font-size: 0.8rem;
+  color: var(--mitla-text-muted);
+  margin-bottom: 0.5rem;
+}

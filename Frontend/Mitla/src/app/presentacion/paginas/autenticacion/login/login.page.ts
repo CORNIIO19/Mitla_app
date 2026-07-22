@@ -82,7 +82,9 @@ export class LoginPage {
         this.cargando = false;
 
         // this.router.navigate(['/inicio']);
-        this.router.navigate(['/inicio']);
+        this.router.navigate(['/inicio'],{
+          replaceUrl: true
+        });
       },
       error: (error) => {
         console.error(error);

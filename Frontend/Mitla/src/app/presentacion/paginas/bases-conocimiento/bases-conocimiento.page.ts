@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { BarraSuperiorComponent } from '../../componentes/barra-superior/barra-superior.component';
 
 import {
   IonContent,
@@ -28,7 +27,6 @@ import { BaseConocimiento } from '../../../dominio/entidades/base-conocimiento.m
 import { ListarBasesUseCase } from '../../../aplicacion/casos-uso/listar-bases.usecase';
 import { CrearBaseUseCase } from '../../../aplicacion/casos-uso/crear-base.usecase';
 import { ActualizarBaseUseCase } from '../../../aplicacion/casos-uso/actualizar-base.usecase';
-import { TokenService } from '../../../seguridad/servicios/token.service';
 import { TarjetaBaseComponent } from '../../componentes/tarjeta-base/tarjeta-base.component';
 import { EstadoCargaComponent } from '../../componentes/estado-carga/estado-carga.component';
 import { EstadoVacioComponent } from '../../componentes/estado-vacio/estado-vacio.component';
@@ -59,14 +57,13 @@ import { MensajeAlertaComponent } from '../../componentes/mensaje-alerta/mensaje
     // IonText,
     // IonSpinner,
     // IonButtons,
-    BarraSuperiorComponent,
     TarjetaBaseComponent,
     EstadoCargaComponent,
     EstadoVacioComponent,
     MensajeAlertaComponent
   ]
 })
-export class BasesConocimientoPage {
+export class BasesConocimientoPage implements OnInit{
   bases: BaseConocimiento[] = [];
 
   nombre = '';
@@ -86,12 +83,11 @@ export class BasesConocimientoPage {
     private crearBaseUseCase: CrearBaseUseCase,
     private actualizarBaseUseCase: ActualizarBaseUseCase,
     private router: Router,
-    private tokenService: TokenService
   ) {}
 
-  ionViewWillEnter(): void {
-    this.cargarBases();
-  }
+  ngOnInit(): void {
+  this.cargarBases();
+}
 
   cargarBases(): void {
     this.cargando = true;
@@ -203,10 +199,5 @@ iniciarEdicion(base: BaseConocimiento): void {
 
   abrirBase(base: BaseConocimiento): void {
     this.router.navigate(['/archivos', base.id_base]);
-  }
-
-  cerrarSesion(): void {
-    this.tokenService.limpiarSesion();
-    this.router.navigate(['/login']);
   }
 }

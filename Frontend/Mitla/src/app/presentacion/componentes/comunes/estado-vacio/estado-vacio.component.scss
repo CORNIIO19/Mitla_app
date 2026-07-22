@@ -1,0 +1,17 @@
+.estado-vacio {
+  text-align: center;
+  padding: 2rem 1rem;
+  border: 1px dashed var(--mitla-border-color);
+  border-radius: var(--mitla-radius);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.estado-vacio h3 {
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+}
+
+.estado-vacio p {
+  margin-bottom: 1rem;
+  color: var(--mitla-text-muted);
+}

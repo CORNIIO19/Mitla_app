@@ -1,112 +1,4 @@
-<ion-content fullscreen>
-
-  <main class="dashboard-shell">
-
-    <aside class="dashboard-sidebar">
-
-      <div class="sidebar-brand">
-        <h1>MITLA</h1>
-        <p>Conocimiento local y privado</p>
-      </div>
-
-      <nav class="sidebar-nav" aria-label="Navegación principal">
-
-        <button type="button" class="nav-item activo" (click)="irAInicio()">
-          Inicio
-        </button>
-
-        <button type="button" class="nav-item" (click)="irABases()">
-          Bases de conocimiento
-        </button>
-
-        <button type="button" class="nav-item" (click)="irAChat()">
-          Chat
-        </button>
-
-        <button type="button" class="nav-item" (click)="irAConfiguracion()">
-          Configuración
-        </button>
-
-        <button type="button" class="nav-item" (click)="irASincronizacion()">
-          Sincronización
-        </button>
-
-      </nav>
-
-      <section class="historial-panel">
-
-        <div class="historial-header">
-          <h2>Historial</h2>
-          <span>{{ conversacionesFiltradas.length }}</span>
-        </div>
-
-        <div class="historial-lista">
-
-          <button
-            type="button"
-            class="historial-item"
-            *ngFor="let conversacion of conversacionesFiltradas"
-            (click)="abrirConversacion(conversacion)">
-
-            <strong>{{ conversacion.titulo }}</strong>
-            <span>{{ conversacion.base }}</span>
-            <small>{{ conversacion.fecha }}</small>
-
-          </button>
-
-        </div>
-
-      </section>
-
-    </aside>
-
-    <section class="dashboard-main">
-
-      <header class="dashboard-topbar">
-
-        <label class="busqueda-global">
-          <span>Buscar</span>
-
-          <input
-            type="search"
-            [(ngModel)]="busqueda"
-            placeholder="Buscar conversaciones, bases o temas..."
-            title="Buscar en Mitla"
-            aria-label="Buscar en Mitla"
-          >
-        </label>
-
-        <div class="topbar-actions">
-
-          <button type="button" class="topbar-button">
-            Opciones
-          </button>
-
-          <div class="perfil-usuario">
-            <div class="avatar-usuario">
-              {{ inicialUsuario }}
-            </div>
-
-            <div>
-              <strong>{{ usuario?.nombre || 'Usuario' }}</strong>
-              <span>{{ usuario?.email || 'Sesión activa' }}</span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            class="topbar-button cerrar"
-            (click)="cerrarSesion()">
-
-            Cerrar sesión
-
-          </button>
-
-        </div>
-
-      </header>
-
-      <section class="dashboard-body">
+<section class="pagina-inicio">
 
   <app-mensaje-alerta
     *ngIf="error"
@@ -120,126 +12,61 @@
   </app-estado-carga>
 
   <section
+    *ngIf="!cargando"
     class="chat-layout"
     [class.chat-layout-inicial]="!chatIniciado"
-    [class.chat-layout-conversacion]="chatIniciado"
-    *ngIf="!cargando">
+    [class.chat-layout-conversacion]="chatIniciado">
 
-    <!-- MODO INICIAL -->
-    <ng-container *ngIf="!chatIniciado">
+    <!-- ESTADO INICIAL -->
+    <section
+      class="chat-inicial"
+      *ngIf="!chatIniciado; else conversacionActiva">
 
-      <section class="chat-inicial">
+      <div class="chat-inicial__contenido">
 
-        <h2>
-          Buenos días, {{ usuario?.nombre || '@Usuario' }}
-        </h2>
+        <header class="chat-inicial__encabezado">
 
-        <section class="chat-input-inicial">
+          <span class="chat-inicial__etiqueta">
+            Asistente local
+          </span>
 
-          <div class="chat-input-box-inicial">
+          <h1>
+            Buenos días,
+            {{ usuario?.nombre || 'Usuario' }}
+          </h1>
 
-            <textarea
-              id="pregunta-chat-inicial"
-              [(ngModel)]="pregunta"
-              placeholder="¿Qué deseas consultar hoy?"
-              title="Pregunta para Mitla"
-              aria-label="Pregunta para Mitla">
-            </textarea>
+          <p>
+            Consulta el contenido de tus bases de conocimiento
+            desde un solo lugar.
+          </p>
 
-            <div class="input-footer">
+        </header>
 
-              <span>
-                Sonnet 4.0 Bajo
-              </span>
+        <app-chat-input
+          [valor]="pregunta"
+          placeholder="¿Qué deseas consultar hoy?"
+          (valorChange)="pregunta = $event"
+          (enviar)="enviarPregunta()">
+        </app-chat-input>
 
-              <button
-                type="button"
-                (click)="enviarPregunta()"
-                [disabled]="!pregunta.trim()"
-                aria-label="Enviar pregunta">
+      </div>
 
-                ↑
+    </section>
 
-              </button>
+    <!-- ESTADO CONVERSACIÓN -->
+    <ng-template #conversacionActiva>
 
-            </div>
+      <app-chat-conversacion
+        class="chat-conversacion-host"
+        [mensajes]="mensajesChat"
+        [pregunta]="pregunta"
+        [inicialUsuario]="inicialUsuario"
+        (preguntaChange)="pregunta = $event"
+        (enviar)="enviarPregunta()">
+      </app-chat-conversacion>
 
-          </div>
-
-        </section>
-
-      </section>
-
-    </ng-container>
-
-    <!-- MODO CHAT ACTIVO -->
-    <ng-container *ngIf="chatIniciado">
-
-      <section class="chat-activo" aria-label="Conversación con Mitla">
-
-        <div class="chat-thread">
-
-          <article
-            class="mensaje"
-            *ngFor="let mensaje of mensajesChat"
-            [class.mensaje-usuario]="mensaje.rol === 'usuario'"
-            [class.mensaje-asistente]="mensaje.rol === 'asistente'">
-
-            <div class="mensaje-avatar">
-              {{ mensaje.rol === 'usuario' ? inicialUsuario : 'M' }}
-            </div>
-
-            <div class="mensaje-cuerpo">
-
-              <div class="mensaje-autor">
-                {{ mensaje.rol === 'usuario' ? 'Tú' : 'Mitla' }}
-              </div>
-
-              <div class="mensaje-contenido">
-                <p>{{ mensaje.contenido }}</p>
-              </div>
-
-            </div>
-
-          </article>
-
-        </div>
-
-      </section>
-
-      <section class="chat-input-panel chat-input-panel-activo">
-
-        <div class="chat-input-box">
-
-          <textarea
-            id="pregunta-chat"
-            [(ngModel)]="pregunta"
-            placeholder="Pregunta algo sobre tus bases de conocimiento..."
-            title="Pregunta para Mitla"
-            aria-label="Pregunta para Mitla">
-          </textarea>
-
-          <button
-            type="button"
-            (click)="enviarPregunta()"
-            [disabled]="!pregunta.trim()">
-
-            Enviar
-
-          </button>
-
-        </div>
-
-      </section>
-
-    </ng-container>
+    </ng-template>
 
   </section>
 
 </section>
-
-    </section>
-
-  </main>
-
-</ion-content>

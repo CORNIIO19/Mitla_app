@@ -1,0 +1,49 @@
+<div class="sidebar-content">
+
+  <div class="sidebar-brand">
+
+    <h1>MITLA</h1>
+
+    <p>
+      Gestiona tu conocimiento
+    </p>
+
+  </div>
+
+  <nav
+    class="sidebar-nav"
+    aria-label="Navegación principal">
+
+  <a
+  *ngFor="let opcion of opcionesNavegacion"
+  [routerLink]="opcion.ruta"
+  [class.activo]="estaActiva(opcion)"
+  [attr.aria-current]="estaActiva(opcion) ? 'page' : null"
+  class="nav-item">
+
+  {{ opcion.texto }}
+
+</a>
+
+  </nav>
+
+  <section class="historial-panel">
+
+    <div class="historial-header">
+
+      <h2>Historial</h2>
+
+      <span>
+        {{ conversacionesRecientes.length }}
+      </span>
+
+    </div>
+
+    <app-historial-conversaciones
+      [conversaciones]="conversacionesRecientes"
+      (seleccionar)="abrirConversacion()">
+    </app-historial-conversaciones>
+
+  </section>
+
+</div>

@@ -1,0 +1,324 @@
+/* =========================================================
+   HOST DEL COMPONENTE
+   ========================================================= */
+
+/*
+ * :host representa el elemento:
+ *
+ * <app-chat-conversacion>
+ *
+ * Debe ocupar toda la altura y anchura que InicioPage
+ * le entrega.
+ */
+:host {
+  display: block;
+  box-sizing: border-box;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   CONTENEDOR GENERAL DEL CHAT
+   ========================================================= */
+
+/*
+ * El chat se divide en dos filas:
+ *
+ * 1. Mensajes: ocupa todo el espacio restante.
+ * 2. Input: utiliza solamente su altura necesaria.
+ *
+ * El borde exterior engloba tanto los mensajes como
+ * el área de escritura.
+ */
+.chat-conversacion {
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  border: 1.5px solid rgba(255, 255, 255, 0.82);
+  border-radius: 24px;
+
+  background: rgba(0, 0, 0, 0.1);
+
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 18px 45px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   ÁREA DE MENSAJES
+   ========================================================= */
+
+/*
+ * Esta zona es la única que debe desplazarse cuando
+ * la conversación crezca.
+ *
+ * Ya no lleva borde exterior, porque ese borde pertenece
+ * a .chat-conversacion.
+ */
+.chat-conversacion__thread {
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  width: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 1.5rem;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  border: none;
+  border-radius: 0;
+
+  background: transparent;
+
+  /*
+   * Mantiene reservado el espacio de la barra de scroll
+   * para evitar pequeños movimientos horizontales.
+   */
+  scrollbar-gutter: stable;
+}
+
+
+/*
+ * Los componentes de los mensajes se comportan como
+ * bloques dentro de la columna.
+ */
+.chat-conversacion__thread app-mensaje-usuario,
+.chat-conversacion__thread app-mensaje-modelo {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+}
+
+
+/* =========================================================
+   ESTADO VACÍO
+   ========================================================= */
+
+/*
+ * Este elemento ocupa la misma primera fila que el thread.
+ * Angular muestra uno u otro, nunca los dos simultáneamente.
+ */
+.chat-conversacion__vacio {
+  box-sizing: border-box;
+
+  display: grid;
+  place-content: center;
+
+  width: 100%;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 2rem;
+
+  overflow: auto;
+
+  border: none;
+  border-radius: 0;
+
+  background: transparent;
+  color: #ffffff;
+
+  text-align: center;
+}
+
+.chat-conversacion__vacio h3 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.chat-conversacion__vacio p {
+  max-width: 52ch;
+
+  margin: 0.65rem auto 0;
+
+  color: rgba(255, 255, 255, 0.68);
+
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   ÁREA DEL INPUT
+   ========================================================= */
+
+/*
+ * Esta clase corresponde al footer:
+ *
+ * <footer class="chat-conversacion__entrada">
+ *
+ * Se encuentra dentro del mismo borde del chat.
+ */
+.chat-conversacion__entrada {
+  box-sizing: border-box;
+
+  width: 100%;
+
+  min-width: 0;
+
+  padding: 0.85rem 1rem 1rem;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+
+  background: rgba(20, 14, 16, 0.32);
+
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+
+/*
+ * El input conserva una anchura máxima para que no se
+ * expanda demasiado en monitores grandes.
+ */
+.chat-conversacion__entrada app-chat-input {
+  display: block;
+
+  width: min(100%, 900px);
+
+  min-width: 0;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   COMPATIBILIDAD TEMPORAL
+   ========================================================= */
+
+/*
+ * Esta regla permite que el diseño siga funcionando aunque
+ * app-chat-input todavía sea hijo directo de
+ * .chat-conversacion y no esté dentro del footer.
+ *
+ * Puedes eliminar esta sección cuando confirmes que tu HTML
+ * ya utiliza chat-conversacion__entrada.
+ */
+.chat-conversacion > app-chat-input {
+  box-sizing: border-box;
+
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+
+  padding: 0.85rem 1rem 1rem;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+
+  background: rgba(20, 14, 16, 0.32);
+}
+
+
+/* =========================================================
+   BARRA DE DESPLAZAMIENTO
+   ========================================================= */
+
+.chat-conversacion__thread::-webkit-scrollbar,
+.chat-conversacion__vacio::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-conversacion__thread::-webkit-scrollbar-track,
+.chat-conversacion__vacio::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-conversacion__thread::-webkit-scrollbar-thumb,
+.chat-conversacion__vacio::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.22)
+    padding-box;
+}
+
+.chat-conversacion__thread::-webkit-scrollbar-thumb:hover,
+.chat-conversacion__vacio::-webkit-scrollbar-thumb:hover {
+  background:
+    rgba(255, 255, 255, 0.38)
+    padding-box;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .chat-conversacion {
+    border-radius: 20px;
+  }
+
+  .chat-conversacion__thread {
+    gap: 1rem;
+
+    padding: 1rem;
+  }
+
+  .chat-conversacion__vacio {
+    padding: 1.25rem;
+  }
+
+  .chat-conversacion__entrada {
+    padding: 0.75rem;
+  }
+
+  .chat-conversacion > app-chat-input {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-conversacion {
+    border-radius: 18px;
+  }
+
+  .chat-conversacion__thread {
+    padding: 0.75rem;
+  }
+
+  .chat-conversacion__vacio h3 {
+    font-size: 1.1rem;
+  }
+
+  .chat-conversacion__vacio p {
+    font-size: 0.88rem;
+  }
+}

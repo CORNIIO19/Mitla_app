@@ -1,0 +1,72 @@
+<section class="chat-conversacion">
+
+  <!-- =====================================================
+       ÁREA DE MENSAJES
+       ===================================================== -->
+
+  <div
+    *ngIf="mensajes.length > 0; else estadoVacio"
+    class="chat-conversacion__thread"
+    aria-live="polite">
+
+    <ng-container *ngFor="let mensaje of mensajes">
+
+      <!-- Mensaje escrito por el usuario -->
+      <app-mensaje-usuario
+        *ngIf="mensaje.rol === 'usuario'; else mensajeModelo"
+        [mensaje]="mensaje"
+        [inicialUsuario]="inicialUsuario">
+      </app-mensaje-usuario>
+
+      <!-- Mensaje generado por el asistente -->
+      <ng-template #mensajeModelo>
+
+        <app-mensaje-modelo
+          [mensaje]="mensaje">
+        </app-mensaje-modelo>
+
+      </ng-template>
+
+    </ng-container>
+
+  </div>
+
+
+  <!-- =====================================================
+       ESTADO SIN MENSAJES
+       ===================================================== -->
+
+  <ng-template #estadoVacio>
+
+    <div class="chat-conversacion__vacio">
+
+      <h3>
+        Empieza una conversación
+      </h3>
+
+      <p>
+        Escribe una pregunta para comenzar a chatear
+        con tus bases de conocimiento.
+      </p>
+
+    </div>
+
+  </ng-template>
+
+
+  <!-- =====================================================
+       ÁREA DE ESCRITURA
+       ===================================================== -->
+
+  <footer class="chat-conversacion__entrada">
+
+    <app-chat-input
+      [valor]="pregunta"
+      [placeholder]="placeholder"
+      (valorChange)="preguntaChange.emit($event)"
+      (enviar)="enviar.emit()">
+    </app-chat-input>
+
+  </footer>
+
+</section>

@@ -1,0 +1,24 @@
+<section class="historial">
+  <div class="historial__header">
+    <h3>Conversaciones recientes</h3>
+  </div>
+
+  <div class="historial__lista" *ngIf="conversaciones.length > 0; else sinConversaciones">
+    <button
+      type="button"
+      class="historial__item"
+      *ngFor="let conversacion of conversaciones"
+      (click)="seleccionar.emit(conversacion)">
+
+      <strong>{{ conversacion.titulo }}</strong>
+      <span>{{ conversacion.base }}</span>
+      <small>{{ conversacion.fecha }}</small>
+    </button>
+  </div>
+
+  <ng-template #sinConversaciones>
+    <div class="historial__vacio">
+      Aún no hay conversaciones recientes.
+    </div>
+  </ng-template>
+</section>

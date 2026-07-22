@@ -1,9 +1,3 @@
-<app-barra-superior
-  titulo="Archivos de la base"
-  [mostrarVolver]="true"
-  defaultHref="/bases-conocimiento">
-</app-barra-superior>
-
 <ion-content class="ion-padding">
   <div class="page-container">
 
@@ -18,6 +12,7 @@
       </label>
 
       <input
+        #archivoInput
         id="archivo-markdown"
         type="file"
         accept=".md"
@@ -34,7 +29,11 @@
         expand="block"
         class="ion-margin-top"
         (click)="subirArchivo()"
-        [disabled]="subiendo">
+        [disabled]="
+          subiendo ||
+          !archivoSeleccionado ||
+          idBase <= 0
+        ">
 
         {{ subiendo ? 'Subiendo...' : 'Subir archivo' }}
 
@@ -83,17 +82,9 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="archivoAbierto">
-    <ion-card-header>
-      <ion-card-title>{{ archivoAbierto.titulo }}</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <p><strong>Archivo:</strong> {{ archivoAbierto.nombre_archivo }}</p>
-      <p><strong>Ruta:</strong> {{ archivoAbierto.ruta_archivo }}</p>
-
-      <pre>{{ archivoAbierto.contenido_extraido || 'Sin contenido extraído.' }}</pre>
-    </ion-card-content>
-  </ion-card>
+  <app-visor-nota
+  *ngIf="archivoAbierto"
+  [archivo]="archivoAbierto">
+</app-visor-nota>
   </div>
 </ion-content>

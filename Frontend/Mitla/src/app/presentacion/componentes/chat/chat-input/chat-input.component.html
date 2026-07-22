@@ -1,0 +1,18 @@
+<div class="chat-input">
+  <textarea
+    [value]="valor"
+    [placeholder]="placeholder"
+    [title]="placeholder"
+    aria-label="Entrada de mensaje"
+    (input)="actualizarValor($event)">
+  </textarea>
+
+  <ion-button
+    type="button"
+    (click)="enviar.emit()"
+    [disabled]="deshabilitado || !valor.trim()">
+
+    Enviar
+
+  </ion-button>
+</div>

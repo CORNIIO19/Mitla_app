@@ -1,0 +1,26 @@
+<section class="chat-bienvenida">
+  <div class="chat-bienvenida__copy">
+    <span class="chat-bienvenida__eyebrow">Panel</span>
+
+    <h1>Buenos días, {{ nombreUsuario }}</h1>
+
+    <p>
+      Este es tu espacio de trabajo. El panel y sus rutas comparten el mismo layout,
+      y aquí solo se muestran bloques reutilizables de conversación y resumen.
+    </p>
+
+    <div class="chat-bienvenida__stats">
+      <span><strong>{{ basesCount }}</strong> bases</span>
+      <span><strong>{{ conversacionesCount }}</strong> conversaciones</span>
+    </div>
+
+    <div class="chat-bienvenida__actions">
+      <ion-button routerLink="/bases-conocimiento">Ver bases</ion-button>
+      <ion-button fill="outline" routerLink="/chat">Abrir chat</ion-button>
+    </div>
+  </div>
+
+  <div class="chat-bienvenida__avatar" aria-hidden="true">
+    {{ inicialUsuario }}
+  </div>
+</section>

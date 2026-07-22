@@ -1,0 +1,84 @@
+<header class="dashboard-topbar">
+
+  <div class="topbar-principal">
+
+    <button
+      *ngIf="mostrarVolver"
+      type="button"
+      class="topbar-button boton-volver"
+      aria-label="Volver a la pantalla anterior"
+      (click)="volver()">
+
+      <span aria-hidden="true">←</span>
+
+    </button>
+
+    <label
+      *ngIf="mostrarBuscador"
+      class="busqueda-global">
+
+      <span>
+        {{ titulo }}
+      </span>
+
+      <input
+        type="search"
+        [(ngModel)]="terminoBusqueda"
+        placeholder="Buscar conversaciones, bases o temas..."
+        title="Buscar en Mitla"
+        aria-label="Buscar en Mitla"
+      >
+
+    </label>
+
+  </div>
+
+  <div class="topbar-actions">
+
+    <a
+      class="topbar-button enlace"
+      routerLink="/configuracion">
+
+      Configuración
+
+    </a>
+
+    <a
+      class="topbar-button enlace"
+      routerLink="/sincronizacion">
+
+      Sincronización
+
+    </a>
+
+    <div class="perfil-usuario">
+
+      <div class="avatar-usuario">
+        {{ inicialUsuario }}
+      </div>
+
+      <div>
+        <strong>
+          {{ usuario?.nombre || 'Usuario' }}
+        </strong>
+
+        <span>
+          {{ usuario?.email || 'Sesión activa' }}
+        </span>
+      </div>
+
+    </div>
+
+    <button
+      *ngIf="mostrarCerrarSesion"
+      type="button"
+      class="topbar-button cerrar"
+      (click)="cerrarSesion()">
+
+      Cerrar sesión
+
+    </button>
+
+  </div>
+
+</header>

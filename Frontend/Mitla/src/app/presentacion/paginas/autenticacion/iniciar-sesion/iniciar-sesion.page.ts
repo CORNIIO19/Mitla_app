@@ -1,0 +1,97 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+
+import {
+  IonContent,
+  IonItem,
+  IonInput,
+  IonButton,
+  IonText,
+  IonLabel
+} from '@ionic/angular/standalone';
+
+import { AutenticarUsuarioUseCase } from '../../../../aplicacion/casos-uso/autenticar-usuario.usecase';
+import { TokenService } from '../../../../infraestructura/seguridad/servicios/token.service';
+import { CarruselFrasesComponent, FraseCarrusel } from '../../../componentes/comunes/carrusel-frases/carrusel-frases.component';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './iniciar-sesion.page.html',
+  styleUrls: ['./iniciar-sesion.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    IonContent,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonText,
+    IonLabel,
+    CarruselFrasesComponent
+  ]
+})
+export class LoginPage {
+  email = '';
+  password = '';
+
+  cargando = false;
+  error = '';
+
+  constructor(
+    private autenticarUsuarioUseCase: AutenticarUsuarioUseCase,
+    private tokenService: TokenService,
+    private router: Router
+  ) {}
+
+  iniciarSesion(): void {
+    this.error = '';
+
+    if (!this.email || !this.password) {
+      this.error = 'Ingresa tu correo y contraseña.';
+      return;
+    }
+
+    this.cargando = true;
+
+    this.autenticarUsuarioUseCase.ejecutar({
+      email: this.email,
+      password: this.password
+    }).subscribe({
+      next: (respuesta) => {
+        this.tokenService.guardarToken(respuesta.access_token);
+        this.tokenService.guardarUsuario(respuesta.usuario);
+
+        this.cargando = false;
+
+        // this.router.navigate(['/inicio']);
+        this.router.navigate(['/inicio']);
+      },
+      error: (error) => {
+        console.error(error);
+
+        this.cargando = false;
+        this.error = 'No se pudo iniciar sesión. Revisa tus datos.';
+      }
+    });
+  }
+
+  frasesPrivacidad: FraseCarrusel[] = [
+      {
+        texto: 'Decir que no te importa el derecho a la privacidad porque no tienes nada que ocultar es como decir que no te importa la libertad de expresión porque no tienes nada que decir.',
+        autor: 'Edward Snowden'
+      },
+      {
+        texto: 'Tus notas, tu conocimiento y tus reglas deben permanecer bajo tu control.',
+        autor: 'Mitla'
+      },
+      {
+        texto: 'La privacidad no es un lujo, es una condición para pensar con libertad.',
+        autor: 'Mitla'
+      }
+    ];
+
+}

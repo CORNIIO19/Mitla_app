@@ -1,0 +1,17 @@
+<article class="carrusel-frases" *ngIf="fraseActual as frase">
+
+  <div
+    class="contenido-frase"
+    [class.ocultando]="animando">
+
+    <p class="frase">
+      “{{ frase.texto }}”
+    </p>
+
+    <strong class="autor">
+      {{ frase.autor }}
+    </strong>
+
+  </div>
+
+</article>

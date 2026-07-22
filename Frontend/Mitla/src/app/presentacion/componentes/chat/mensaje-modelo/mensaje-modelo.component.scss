@@ -1,0 +1,46 @@
+.mensaje {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+
+.mensaje-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-weight: 900;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.mensaje-cuerpo {
+  min-width: 0;
+}
+
+.mensaje-autor {
+  margin-bottom: 0.4rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.mensaje-contenido {
+  color: #ffffff;
+}
+
+.mensaje-contenido p {
+  margin: 0;
+  line-height: 1.65;
+  font-weight: 600;
+}
+
+.mensaje-contenido small {
+  display: block;
+  margin-top: 0.35rem;
+  opacity: 0.72;
+}

@@ -1,0 +1,77 @@
+.historial {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.historial__header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.historial__lista {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.historial__item {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.historial__item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.historial__item strong,
+.historial__item span,
+.historial__item small {
+  display: block;
+}
+
+.historial__item strong {
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.historial__item span {
+  margin-top: 0.3rem;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.78rem;
+}
+
+.historial__item small {
+  margin-top: 0.4rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.historial__vacio {
+  padding: 0.85rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+:host {
+  display: block;
+  min-height: 0;
+}
+
+.historial {
+  min-height: 0;
+}
+
+.historial__lista {
+  min-height: 0;
+  overflow-y: auto;
+}

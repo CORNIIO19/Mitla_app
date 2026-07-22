@@ -1,0 +1,33 @@
+<ion-card button class="tarjeta-base" (click)="abrirBase()">
+
+  <ion-card-header>
+    <ion-card-title>
+      {{ base.nombre }}
+    </ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+
+    <ion-text>
+      <p class="descripcion">
+        {{ base.descripcion || 'Sin descripción' }}
+      </p>
+    </ion-text>
+
+    <p class="metadata">
+      ID: {{ base.id_base }}
+    </p>
+
+    <ion-button
+      fill="clear"
+      size="small"
+      color="primary"
+      (click)="editarBase($event)">
+
+      Editar
+
+    </ion-button>
+
+  </ion-card-content>
+
+</ion-card>

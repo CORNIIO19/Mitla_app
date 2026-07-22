@@ -1,86 +1,49 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-
-import {
-  IonContent, IonButton, IonCol, IonCard, IonCardHeader, IonCardTitle, IonHeader, IonText, IonSpinner, IonGrid, IonRow, IonCardContent, IonLabel, IonList, IonItem } from '@ionic/angular/standalone';
 
 import { TokenService } from '../../../seguridad/servicios/token.service';
 import { ListarBasesUseCase } from '../../../aplicacion/casos-uso/listar-bases.usecase';
+
 import { BaseConocimiento } from '../../../dominio/entidades/base-conocimiento.model';
 import { Usuario } from '../../../dominio/entidades/usuario.model';
 
 import { EstadoCargaComponent } from '../../componentes/estado-carga/estado-carga.component';
 import { MensajeAlertaComponent } from '../../componentes/mensaje-alerta/mensaje-alerta.component';
 
-interface MensajeDashboard {
-  rol: 'usuario' | 'asistente';
-  contenido: string;
-  hora: string;
-}
-
-interface ConversacionHistorial {
-  id: number;
-  titulo: string;
-  base: string;
-  fecha: string;
-}
+import { ChatInputComponent } from '../../componentes/chat/chat-input/chat-input.component';
+import { ChatConversacionComponent } from '../../componentes/chat/chat-conversacion/chat-conversacion.component';
+import { ChatMensaje } from '../../componentes/chat/chat.types';
+import { IonContent } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-inicio',
+  standalone: true,
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
-  standalone: true,
-  imports: [IonItem, IonList, IonLabel, IonCardContent, IonRow, IonGrid, IonSpinner, IonText, IonHeader, IonCardTitle, IonCardHeader, IonCard, IonCol, IonButton, 
+  imports: [IonContent, 
     CommonModule,
-    FormsModule,
-    RouterModule,
-    IonContent,
     EstadoCargaComponent,
-    MensajeAlertaComponent
+    MensajeAlertaComponent,
+    ChatInputComponent,
+    ChatConversacionComponent
   ]
 })
-export class InicioPage {
+export class InicioPage implements OnInit {
   usuario: Usuario | null = null;
   bases: BaseConocimiento[] = [];
 
   cargando = false;
   error = '';
 
-  busqueda = '';
   pregunta = '';
-
-  conversaciones: ConversacionHistorial[] = [
-    {
-      id: 1,
-      titulo: 'Resumen de sistemas operativos',
-      base: 'Sistemas Operativos',
-      fecha: 'Hoy'
-    },
-    {
-      id: 2,
-      titulo: 'Conceptos de redes',
-      base: 'Redes',
-      fecha: 'Ayer'
-    },
-    {
-      id: 3,
-      titulo: 'Preguntas para examen',
-      base: 'Base académica',
-      fecha: 'Reciente'
-    }
-  ];
-
-  mensajesChat: MensajeDashboard[] = [];
+  mensajesChat: ChatMensaje[] = [];
 
   constructor(
-    private router: Router,
     private tokenService: TokenService,
     private listarBasesUseCase: ListarBasesUseCase
   ) {}
 
-  ionViewWillEnter(): void {
+  ngOnInit(): void {
     this.usuario = this.tokenService.obtenerUsuario<Usuario>();
     this.cargarResumen();
   }
@@ -94,92 +57,48 @@ export class InicioPage {
         this.bases = bases;
         this.cargando = false;
       },
+
       error: (error) => {
         console.error(error);
-        this.error = 'No se pudo cargar la información del dashboard.';
+
+        this.error =
+          'No se pudo cargar la información del dashboard.';
+
         this.cargando = false;
       }
     });
   }
 
   get inicialUsuario(): string {
-    return this.usuario?.nombre
-      ? this.usuario.nombre.charAt(0).toUpperCase()
+    return this.usuario?.nombre?.trim()
+      ? this.usuario.nombre.trim().charAt(0).toUpperCase()
       : 'U';
   }
 
-    get chatIniciado(): boolean {
-      return this.mensajesChat.length > 0;
-    }
-
-  get conversacionesFiltradas(): ConversacionHistorial[] {
-    const texto = this.busqueda.trim().toLowerCase();
-
-    if (!texto) {
-      return this.conversaciones;
-    }
-
-    return this.conversaciones.filter((conversacion) =>
-      conversacion.titulo.toLowerCase().includes(texto) ||
-      conversacion.base.toLowerCase().includes(texto)
-    );
+  get chatIniciado(): boolean {
+    return this.mensajesChat.length > 0;
   }
-
-  irAInicio(): void {
-    this.router.navigate(['/inicio']);
-  }
-
-  irABases(): void {
-    this.router.navigate(['/bases-conocimiento']);
-  }
-
-  irAChat(): void {
-    this.router.navigate(['/inicio']);
-  }
-
-  irAConfiguracion(): void {
-    this.router.navigate(['/configuracion']);
-  }
-
-  irASincronizacion(): void {
-    this.router.navigate(['/sincronizacion']);
-  }
-
-  abrirConversacion(conversacion: ConversacionHistorial): void {
-  this.mensajesChat = [
-    {
-      rol: 'asistente',
-      contenido: `Has abierto la conversación "${conversacion.titulo}" de la base "${conversacion.base}". Más adelante aquí cargaremos el historial real desde el backend.`,
-      hora: 'Ahora'
-    }
-  ];
-}
 
   enviarPregunta(): void {
-  const texto = this.pregunta.trim();
+    const texto = this.pregunta.trim();
 
-  if (!texto) {
-    return;
+    if (!texto) {
+      return;
+    }
+
+    this.mensajesChat.push({
+      rol: 'usuario',
+      contenido: texto,
+      hora: 'Ahora'
+    });
+
+    this.pregunta = '';
+
+    this.mensajesChat.push({
+      rol: 'asistente',
+      contenido:
+        'Todavía no estoy conectado al motor RAG, pero esta será el área donde responderé utilizando tus bases de conocimiento.',
+      hora: 'Ahora'
+    });
   }
-
-  this.mensajesChat.push({
-    rol: 'usuario',
-    contenido: texto,
-    hora: 'Ahora'
-  });
-
-  this.pregunta = '';
-
-  this.mensajesChat.push({
-    rol: 'asistente',
-    contenido: 'Todavía no estoy conectado al motor RAG, pero esta será el área donde responderé usando tus bases de conocimiento.',
-    hora: 'Ahora'
-  });
-}
-
-  cerrarSesion(): void {
-    this.tokenService.limpiarSesion();
-    this.router.navigate(['/login']);
-  }
-
 }

@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { BarraSuperiorComponent } from '../../componentes/barra-superior/barra-superior.component';
+import {distinctUntilChanged, map} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {VisorNotaComponent} from '../../componentes/visor-nota/visor-nota.component';
+// import { BarraSuperiorComponent } from '../../componentes/barra-superior/barra-superior.component';
 
 import {
   IonContent,
@@ -19,7 +22,7 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonSpinner
+  IonSpinner,
 } from '@ionic/angular/standalone';
 
 import { Archivo } from '../../../dominio/entidades/archivo.model';
@@ -55,14 +58,15 @@ import { MensajeAlertaComponent } from '../../componentes/mensaje-alerta/mensaje
     // IonItem,
     // IonLabel,
     // IonSpinner,
-    BarraSuperiorComponent,
+    // BarraSuperiorComponent,
     TarjetaArchivoComponent,
     EstadoCargaComponent,
     EstadoVacioComponent,
-    MensajeAlertaComponent
+    MensajeAlertaComponent,
+    VisorNotaComponent
   ]
 })
-export class ArchivosPage {
+export class ArchivosPage implements OnInit{
   idBase = 0;
 
   archivos: Archivo[] = [];
@@ -75,6 +79,11 @@ export class ArchivosPage {
   error = '';
   mensaje = '';
 
+  private readonly destroyRef = inject(DestroyRef);
+
+@ViewChild('inputArchivo')
+inputArchivo?: ElementRef<HTMLInputElement>;
+
   constructor(
     private route: ActivatedRoute,
     private listarArchivosUseCase: ListarArchivosUseCase,
@@ -83,17 +92,21 @@ export class ArchivosPage {
     private eliminarArchivoUseCase: EliminarArchivoUseCase
   ) {}
 
-  ionViewWillEnter(): void {
-    const idBaseParam = this.route.snapshot.paramMap.get('idBase');
-    this.idBase = Number(idBaseParam);
+  ngOnInit(): void {
+  this.route.paramMap
+    .pipe(
+      map((parametros) => {
+        return Number(parametros.get('idBase'));
+      }),
 
-    if (!this.idBase) {
-      this.error = 'No se recibió una base de conocimiento válida.';
-      return;
-    }
+      distinctUntilChanged(),
 
-    this.cargarArchivos();
-  }
+      takeUntilDestroyed(this.destroyRef)
+    )
+    .subscribe((idBase) => {
+      this.prepararBase(idBase);
+    });
+}
 
   cargarArchivos(): void {
     this.cargando = true;
@@ -121,6 +134,16 @@ export class ArchivosPage {
   subirArchivo(): void {
     this.error = '';
     this.mensaje = '';
+
+      if (
+    !Number.isInteger(this.idBase) ||
+    this.idBase <= 0
+  ) {
+    this.error =
+      'No hay una base válida seleccionada para subir el archivo.';
+
+    return;
+  }
 
     if (!this.archivoSeleccionado) {
       this.error = 'Selecciona un archivo antes de subirlo.';
@@ -188,4 +211,30 @@ eliminarArchivo(archivo: Archivo): void {
     }
   });
 }
+private prepararBase(idBase: number): void {
+  this.error = '';
+  this.mensaje = '';
+
+  this.archivos = [];
+  this.archivoAbierto = null;
+  this.archivoSeleccionado = null;
+
+  const idValido =
+    Number.isInteger(idBase) &&
+    idBase > 0;
+
+  if (!idValido) {
+    this.idBase = 0;
+
+    this.error =
+      'No se recibió una base de conocimiento válida.';
+
+    return;
+  }
+
+  this.idBase = idBase;
+
+  this.cargarArchivos();
+}
+
 }

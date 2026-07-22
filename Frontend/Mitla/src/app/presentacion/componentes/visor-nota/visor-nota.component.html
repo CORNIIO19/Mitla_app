@@ -1,3 +1,40 @@
-<p>
-  visor-nota works!
-</p>
+<section class="visor-nota">
+
+  <header class="visor-nota__encabezado">
+
+    <div>
+      <span>Documento abierto</span>
+
+      <h2>
+        {{ archivo.titulo }}
+      </h2>
+    </div>
+
+    <span class="visor-nota__extension">
+      {{ archivo.extension }}
+    </span>
+
+  </header>
+
+  <div class="visor-nota__metadata">
+
+    <span>
+      {{ archivo.nombre_archivo }}
+    </span>
+
+    <span *ngIf="archivo.fecha_actualizacion">
+      Actualizado: {{ archivo.fecha_actualizacion }}
+    </span>
+
+  </div>
+
+  <div class="visor-nota__contenido">
+
+    <pre>{{
+      archivo.contenido_extraido ||
+      'El archivo no tiene contenido extraído.'
+    }}</pre>
+
+  </div>
+
+</section>
