@@ -2,11 +2,11 @@ import { Observable } from 'rxjs';
 
 import {
   ConsultaChatDto
-} from '../../aplicacion/dtos/consulta-chat.dto';
+} from '../dtos/consulta-chat.dto';
 
 import {
   RespuestaChatDto
-} from '../../aplicacion/dtos/respuesta-chat.dto';
+} from '../dtos/respuesta-chat.dto';
 
 export abstract class ChatGateway {
   abstract preguntar(

@@ -1,16 +1,22 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 
-import { ChatMensaje } from '../chat.types';
+import { MensajeChat } from
+  '../../../../dominio/entidades/mensaje-chat.model';
 
 @Component({
   selector: 'app-mensaje-usuario',
+  standalone: true,
   templateUrl: './mensaje-usuario.component.html',
   styleUrls: ['./mensaje-usuario.component.scss'],
-  standalone: true,
-  imports: [CommonModule]
+  imports: [
+    CommonModule
+  ]
 })
 export class MensajeUsuarioComponent {
-  @Input({ required: true }) mensaje!: ChatMensaje;
-  @Input() inicialUsuario = 'U';
+  @Input({ required: true })
+  mensaje!: MensajeChat;
+
+  @Input()
+  inicialUsuario = 'U';
 }

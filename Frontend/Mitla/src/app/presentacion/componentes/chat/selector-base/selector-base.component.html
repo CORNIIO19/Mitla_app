@@ -1,0 +1,114 @@
+<div class="selector-base">
+
+  <label
+    class="selector-base__contenedor"
+    [class.selector-base__contenedor--deshabilitado]="
+      deshabilitado || bases.length === 0
+    "
+    for="selector-base-conocimiento">
+
+    <!-- Icono de base de conocimiento -->
+    <span
+      class="selector-base__icono"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+
+        <path
+          d="M4.75 5.75C4.75 4.78 5.53 4 6.5 4H18.25C18.8 4 19.25 4.45 19.25 5V18.25C19.25 18.8 18.8 19.25 18.25 19.25H6.5C5.53 19.25 4.75 18.47 4.75 17.5V5.75Z"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linejoin="round">
+        </path>
+
+        <path
+          d="M7.75 4V19.25"
+          stroke="currentColor"
+          stroke-width="1.5">
+        </path>
+
+        <path
+          d="M10.75 8H16.25"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round">
+        </path>
+
+      </svg>
+
+    </span>
+
+
+    <!-- Información y selector -->
+    <span class="selector-base__contenido">
+
+      <span class="selector-base__etiqueta">
+        Base activa
+      </span>
+
+      <select
+        id="selector-base-conocimiento"
+        class="selector-base__control"
+        aria-label="Seleccionar base de conocimiento"
+        [disabled]="deshabilitado || bases.length === 0"
+        [value]="idBaseSeleccionada ?? ''"
+        (change)="seleccionarBase($any($event.target).value)">
+
+        <option value="">
+          Selecciona una base
+        </option>
+
+        <option
+          *ngFor="
+            let base of bases;
+            trackBy: identificarBase
+          "
+          [value]="base.id_base">
+
+          {{ base.nombre }}
+
+        </option>
+
+      </select>
+
+    </span>
+
+
+    <!-- Flecha del selector -->
+    <span
+      class="selector-base__flecha"
+      aria-hidden="true">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+
+        <path
+          d="M7 9.5L12 14.5L17 9.5"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+        </path>
+
+      </svg>
+
+    </span>
+
+  </label>
+
+
+  <!-- Estado sin bases disponibles -->
+  <p
+    class="selector-base__ayuda"
+    *ngIf="bases.length === 0">
+
+    Todavía no tienes bases de conocimiento disponibles.
+
+  </p>
+
+</div>

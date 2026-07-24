@@ -5,7 +5,12 @@
        ===================================================== -->
 
   <div
-    *ngIf="mensajes.length > 0; else estadoVacio"
+    #contenedorMensajes
+    *ngIf="
+    mensajes.length > 0 ||
+    respondiendo ||
+    errorChat;
+    else estadoVacio"
     class="chat-conversacion__thread"
     aria-live="polite">
 
@@ -18,7 +23,7 @@
         [inicialUsuario]="inicialUsuario">
       </app-mensaje-usuario>
 
-      <!-- Mensaje generado por el asistente -->
+      <!-- Mensaje generado por MITLA -->
       <ng-template #mensajeModelo>
 
         <app-mensaje-modelo
@@ -29,9 +34,30 @@
 
     </ng-container>
 
+
+    <!-- =====================================================
+         INDICADOR DE ESCRITURA
+         ===================================================== -->
+
+    <app-indicador-escritura
+      *ngIf="respondiendo">
+    </app-indicador-escritura>
+
   </div>
 
+  <!-- =====================================================
+     ERROR DE CONSULTA
+     ===================================================== -->
 
+  <app-mensaje-error
+    *ngIf="errorChat"
+    [mensaje]="errorChat"
+    [permitirReintento]="permitirReintento"
+    [deshabilitado]="respondiendo"
+    (reintentar)="reintentar.emit()"
+    (cerrar)="cerrarError.emit()">
+  </app-mensaje-error>
+  
   <!-- =====================================================
        ESTADO SIN MENSAJES
        ===================================================== -->
@@ -40,13 +66,21 @@
 
     <div class="chat-conversacion__vacio">
 
+      <div
+        class="chat-conversacion__vacio-icono"
+        aria-hidden="true">
+
+        M
+
+      </div>
+
       <h3>
         Empieza una conversación
       </h3>
 
       <p>
-        Escribe una pregunta para comenzar a chatear
-        con tus bases de conocimiento.
+        Selecciona una base de conocimiento y escribe
+        una pregunta para comenzar a conversar con tus documentos.
       </p>
 
     </div>
@@ -55,17 +89,34 @@
 
 
   <!-- =====================================================
-       ÁREA DE ESCRITURA
+       COMPOSITOR DEL CHAT
        ===================================================== -->
 
   <footer class="chat-conversacion__entrada">
 
-    <app-chat-input
-      [valor]="pregunta"
-      [placeholder]="placeholder"
-      (valorChange)="preguntaChange.emit($event)"
-      (enviar)="enviar.emit()">
-    </app-chat-input>
+    <div class="chat-conversacion__compositor">
+
+      <!-- Selección de la base que será consultada -->
+      <app-selector-base
+        [bases]="bases"
+        [idBaseSeleccionada]="idBaseSeleccionada"
+        [deshabilitado]="respondiendo"
+        (idBaseSeleccionadaChange)="
+          idBaseSeleccionadaChange.emit($event)
+        ">
+      </app-selector-base>
+
+
+      <!-- Escritura y envío de la pregunta -->
+      <app-chat-input
+        [valor]="pregunta"
+        [placeholder]="placeholder"
+        [deshabilitado]="respondiendo"
+        (valorChange)="preguntaChange.emit($event)"
+        (enviar)="enviar.emit()">
+      </app-chat-input>
+
+    </div>
 
   </footer>
 

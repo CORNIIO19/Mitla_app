@@ -1,0 +1,254 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.mensaje-error {
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+
+  width: min(760px, calc(100% - 52px));
+  margin: 0 auto;
+  padding: 15px 48px 15px 15px;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(112, 17, 17, 0.34),
+      rgba(68, 10, 10, 0.2)
+    );
+
+  border: 1px solid rgba(238, 91, 91, 0.28);
+  border-radius: 16px;
+
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  animation: aparecer-error 180ms ease-out;
+
+  &__icono {
+    display: grid;
+    flex: 0 0 36px;
+    place-items: center;
+
+    width: 36px;
+    height: 36px;
+
+    color: rgba(255, 163, 163, 0.96);
+
+    background: rgba(196, 44, 44, 0.15);
+    border: 1px solid rgba(244, 106, 106, 0.19);
+    border-radius: 11px;
+
+    svg {
+      width: 21px;
+      height: 21px;
+    }
+  }
+
+  &__contenido {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__titulo {
+    display: block;
+    margin-bottom: 4px;
+
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 0.88rem;
+    font-weight: 720;
+  }
+
+  &__descripcion {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  &__acciones {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-top: 12px;
+  }
+
+  &__boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-height: 34px;
+    padding: 6px 11px;
+
+    color: rgba(255, 255, 255, 0.88);
+    font-family: inherit;
+    font-size: 0.76rem;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    border-radius: 10px;
+
+    transition:
+      transform 140ms ease,
+      background-color 140ms ease,
+      border-color 140ms ease,
+      opacity 140ms ease;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(250, 122, 122, 0.54);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.48;
+    }
+
+    &--principal {
+      background: rgba(171, 38, 38, 0.62);
+      border: 1px solid rgba(245, 100, 100, 0.21);
+
+      &:hover:not(:disabled) {
+        background: rgba(190, 45, 45, 0.75);
+        border-color: rgba(250, 120, 120, 0.32);
+      }
+    }
+
+    &--secundario {
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.075);
+        border-color: rgba(255, 255, 255, 0.13);
+      }
+    }
+  }
+
+  &__cerrar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    display: grid;
+    place-items: center;
+
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    color: rgba(255, 255, 255, 0.48);
+    cursor: pointer;
+
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 9px;
+
+    transition:
+      color 140ms ease,
+      background-color 140ms ease,
+      border-color 140ms ease;
+
+    svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    &:hover:not(:disabled) {
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.065);
+      border-color: rgba(255, 255, 255, 0.07);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(250, 122, 122, 0.5);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+}
+
+@keyframes aparecer-error {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .mensaje-error {
+    width: calc(100% - 10px);
+    gap: 10px;
+    padding:
+      13px
+      42px
+      13px
+      12px;
+
+    border-radius: 14px;
+
+    &__icono {
+      flex-basis: 32px;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+
+      svg {
+        width: 19px;
+        height: 19px;
+      }
+    }
+
+    &__titulo {
+      font-size: 0.84rem;
+    }
+
+    &__descripcion {
+      font-size: 0.76rem;
+    }
+
+    &__boton {
+      min-height: 32px;
+      padding: 5px 9px;
+    }
+  }
+}

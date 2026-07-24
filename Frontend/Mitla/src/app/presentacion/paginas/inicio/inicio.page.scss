@@ -41,6 +41,79 @@
   overflow: hidden;
 }
 
+.chat-inicial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  padding: 36px 24px;
+
+  &__contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: min(920px, 100%);
+  }
+
+  &__encabezado {
+    width: 100%;
+    text-align: center;
+
+    h1 {
+      margin: 12px 0;
+
+      color: #ffffff;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 750;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    p {
+      max-width: 600px;
+      margin: 0 auto;
+
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+  }
+
+  &__etiqueta {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  &__compositor {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    width: min(820px, 100%);
+    margin-top: 34px;
+    padding: 10px;
+
+    background: rgba(8, 8, 8, 0.18);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 26px;
+
+    box-shadow:
+      0 16px 38px rgba(0, 0, 0, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
 /* ---------------------------------------------
    ESTADO INICIAL
 ---------------------------------------------- */

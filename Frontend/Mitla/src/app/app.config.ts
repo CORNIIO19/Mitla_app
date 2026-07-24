@@ -17,6 +17,15 @@ import { ArchivoRepositorio } from './dominio/repositorios/archivo.repositorio';
 import { UsuarioApiRepositorio } from './infraestructura/api/usuario-api.repositorio';
 import { BaseApiRepositorio } from './infraestructura/api/base-api.repositorio';
 import { ArchivoApiRepositorio } from './infraestructura/api/archivo-api.repositorio';
+import {
+  ChatGateway
+} from './dominio/contratos/chat.repositorio';
+
+import {
+  ChatHttpRepositorio
+} from './infraestructura/api/chat-http.repositorio';
+
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -47,6 +56,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: ArchivoRepositorio,
       useClass: ArchivoApiRepositorio
+    },
+    {
+      provide: ChatGateway,
+      useClass: ChatHttpRepositorio
     }
 
   ]

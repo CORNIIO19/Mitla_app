@@ -1,15 +1,29 @@
 <section class="pagina-inicio">
 
+  <!-- =====================================================
+       MENSAJES GENERALES
+       ===================================================== -->
+
   <app-mensaje-alerta
     *ngIf="error"
     tipo="danger"
     [mensaje]="error">
   </app-mensaje-alerta>
 
+
+  <!-- =====================================================
+       ESTADO DE CARGA
+       ===================================================== -->
+
   <app-estado-carga
     *ngIf="cargando"
     mensaje="Cargando dashboard...">
   </app-estado-carga>
+
+
+  <!-- =====================================================
+       ÁREA PRINCIPAL
+       ===================================================== -->
 
   <section
     *ngIf="!cargando"
@@ -17,10 +31,14 @@
     [class.chat-layout-inicial]="!chatIniciado"
     [class.chat-layout-conversacion]="chatIniciado">
 
-    <!-- ESTADO INICIAL -->
+
+    <!-- ===================================================
+         ESTADO INICIAL
+         =================================================== -->
+
     <section
-      class="chat-inicial"
-      *ngIf="!chatIniciado; else conversacionActiva">
+      *ngIf="!chatIniciado; else conversacionActiva"
+      class="chat-inicial">
 
       <div class="chat-inicial__contenido">
 
@@ -42,27 +60,57 @@
 
         </header>
 
-        <app-chat-input
-          [valor]="pregunta"
-          placeholder="¿Qué deseas consultar hoy?"
-          (valorChange)="pregunta = $event"
-          (enviar)="enviarPregunta()">
-        </app-chat-input>
+
+        <!-- Selector e input para iniciar la conversación -->
+
+        <div class="chat-inicial__compositor">
+
+          <app-selector-base
+            [bases]="bases"
+            [idBaseSeleccionada]="idBaseSeleccionada"
+            [deshabilitado]="respondiendo"
+            (idBaseSeleccionadaChange)="seleccionarBase($event)">
+          </app-selector-base>
+
+
+          <app-chat-input
+            [valor]="pregunta"
+            [placeholder]="
+              'Pregunta algo sobre tus bases de conocimiento...'
+            "
+            [deshabilitado]="respondiendo"
+            (valorChange)="pregunta = $event"
+            (enviar)="enviarPregunta()">
+          </app-chat-input>
+
+        </div>
 
       </div>
 
     </section>
 
-    <!-- ESTADO CONVERSACIÓN -->
+
+    <!-- ===================================================
+         CONVERSACIÓN ACTIVA
+         =================================================== -->
+
     <ng-template #conversacionActiva>
 
       <app-chat-conversacion
-        class="chat-conversacion-host"
         [mensajes]="mensajesChat"
         [pregunta]="pregunta"
         [inicialUsuario]="inicialUsuario"
+        [respondiendo]="respondiendo"
+        [bases]="bases"
+        [idBaseSeleccionada]="idBaseSeleccionada"
+        [errorChat]="errorChat"
+        [permitirReintento]="consultaFallida !== null"
+
         (preguntaChange)="pregunta = $event"
-        (enviar)="enviarPregunta()">
+        (idBaseSeleccionadaChange)="seleccionarBase($event)"
+        (enviar)="enviarPregunta()"
+        (reintentar)="reintentarPregunta()"
+        (cerrarError)="cerrarErrorChat()">
       </app-chat-conversacion>
 
     </ng-template>

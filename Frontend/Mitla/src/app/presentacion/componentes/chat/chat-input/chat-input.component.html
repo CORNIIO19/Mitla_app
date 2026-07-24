@@ -1,18 +1,51 @@
-<div class="chat-input">
+<div
+  class="chat-input"
+  [class.chat-input--deshabilitado]="deshabilitado">
+
   <textarea
+    #campoMensaje
+    class="chat-input__campo"
+    rows="1"
     [value]="valor"
     [placeholder]="placeholder"
     [title]="placeholder"
-    aria-label="Entrada de mensaje"
-    (input)="actualizarValor($event)">
+    [disabled]="deshabilitado"
+    aria-label="Escribe tu pregunta"
+    (input)="actualizarValor($event)"
+    (keydown)="manejarTeclado($event)">
   </textarea>
 
-  <ion-button
+  <button
+    class="chat-input__boton"
     type="button"
-    (click)="enviar.emit()"
-    [disabled]="deshabilitado || !valor.trim()">
+    aria-label="Enviar pregunta"
+    title="Enviar pregunta"
+    [disabled]="deshabilitado || !valor.trim()"
+    (click)="solicitarEnvio()">
 
-    Enviar
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true">
 
-  </ion-button>
+      <path
+        d="M12 19V5"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round">
+      </path>
+
+      <path
+        d="M6.5 10.5L12 5L17.5 10.5"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round">
+      </path>
+
+    </svg>
+
+  </button>
+
 </div>

@@ -78,6 +78,7 @@ export class BasesConocimientoPage implements OnInit{
   error = '';
   mensaje = '';
 
+
   constructor(
     private listarBasesUseCase: ListarBasesUseCase,
     private crearBaseUseCase: CrearBaseUseCase,

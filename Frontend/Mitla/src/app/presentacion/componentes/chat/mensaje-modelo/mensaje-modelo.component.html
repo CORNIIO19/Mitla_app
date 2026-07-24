@@ -1,12 +1,169 @@
-<article class="mensaje mensaje-modelo">
-  <div class="mensaje-avatar">M</div>
+<article class="mensaje-modelo">
 
-  <div class="mensaje-cuerpo">
-    <div class="mensaje-autor">Mitla</div>
+  <div class="mensaje-modelo__fila">
 
-    <div class="mensaje-contenido">
-      <p>{{ mensaje.contenido }}</p>
-      <small>{{ mensaje.hora }}</small>
+    <!-- Avatar de MITLA -->
+    <div
+      class="mensaje-modelo__avatar"
+      aria-label="MITLA">
+
+      M
+
     </div>
+
+
+    <div class="mensaje-modelo__contenido">
+
+      <!-- Nombre y hora -->
+      <div class="mensaje-modelo__meta">
+
+        <span class="mensaje-modelo__nombre">
+          MITLA
+        </span>
+
+        <time
+          class="mensaje-modelo__hora"
+          [attr.datetime]="mensaje.fecha">
+
+          {{ mensaje.fecha | date:'HH:mm' }}
+
+        </time>
+
+      </div>
+
+
+      <!-- Respuesta con formato Markdown -->
+      <div class="mensaje-modelo__respuesta">
+
+        <app-contenido-markdown
+          [contenido]="mensaje.contenido">
+        </app-contenido-markdown>
+
+      </div>
+
+
+      <!-- Información y acciones -->
+      <footer class="mensaje-modelo__acciones">
+
+        <!-- Base utilizada para generar la respuesta -->
+        <div
+          *ngIf="mensaje.nombreBase"
+          class="mensaje-modelo__base"
+          [title]="
+            'Esta respuesta utilizó la base ' +
+            mensaje.nombreBase
+          ">
+
+          <svg
+            class="mensaje-modelo__base-icono"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <path
+              d="M5 5.75C5 4.78 5.78 4 6.75 4H18C18.55 4 19 4.45 19 5V18.25C19 18.8 18.55 19.25 18 19.25H6.75C5.78 19.25 5 18.47 5 17.5V5.75Z"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linejoin="round">
+            </path>
+
+            <path
+              d="M8 4V19.25"
+              stroke="currentColor"
+              stroke-width="1.5">
+            </path>
+
+            <path
+              d="M11 8H16"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round">
+            </path>
+
+          </svg>
+
+          <span class="mensaje-modelo__base-etiqueta">
+            Base consultada:
+          </span>
+
+          <span class="mensaje-modelo__base-nombre">
+            {{ mensaje.nombreBase }}
+          </span>
+
+        </div>
+
+
+        <!-- Botón para copiar la respuesta -->
+        <button
+          class="mensaje-modelo__copiar"
+          type="button"
+          [class.mensaje-modelo__copiar--activo]="copiado"
+          [attr.aria-label]="
+            copiado
+              ? 'Respuesta copiada'
+              : 'Copiar respuesta'
+          "
+          [title]="
+            copiado
+              ? 'Respuesta copiada'
+              : 'Copiar respuesta'
+          "
+          (click)="copiarRespuesta()">
+
+          <svg
+            *ngIf="!copiado; else iconoCopiado"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true">
+
+            <rect
+              x="8"
+              y="8"
+              width="11"
+              height="11"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.6">
+            </rect>
+
+            <path
+              d="M16 8V6C16 4.9 15.1 4 14 4H6C4.9 4 4 4.9 4 6V14C4 15.1 4.9 16 6 16H8"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round">
+            </path>
+
+          </svg>
+
+          <ng-template #iconoCopiado>
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true">
+
+              <path
+                d="M5.5 12.5L10 17L18.5 8.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+              </path>
+
+            </svg>
+
+          </ng-template>
+
+          <span>
+            {{ copiado ? 'Copiado' : 'Copiar' }}
+          </span>
+
+        </button>
+
+      </footer>
+
+    </div>
+
   </div>
+
 </article>

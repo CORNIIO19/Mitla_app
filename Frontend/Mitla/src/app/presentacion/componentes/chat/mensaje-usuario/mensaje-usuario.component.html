@@ -1,14 +1,29 @@
-<article class="mensaje mensaje-usuario">
-  <div class="mensaje-avatar">
-    {{ inicialUsuario }}
-  </div>
+<article class="mensaje-usuario">
+  <div class="mensaje-usuario__fila">
 
-  <div class="mensaje-cuerpo">
-    <div class="mensaje-autor">Tú</div>
+    <div class="mensaje-usuario__contenido">
 
-    <div class="mensaje-contenido">
-      <p>{{ mensaje.contenido }}</p>
-      <small>{{ mensaje.hora }}</small>
+      <div class="mensaje-usuario__meta">
+        <span class="mensaje-usuario__nombre">Tú</span>
+
+        <time
+          class="mensaje-usuario__hora"
+          [attr.datetime]="mensaje.fecha">
+          {{ mensaje.fecha | date:'HH:mm' }}
+        </time>
+      </div>
+
+      <div class="mensaje-usuario__burbuja">
+        {{ mensaje.contenido }}
+      </div>
+
     </div>
+
+    <div
+      class="mensaje-usuario__avatar"
+      [attr.aria-label]="'Usuario ' + inicialUsuario">
+      {{ inicialUsuario }}
+    </div>
+
   </div>
 </article>

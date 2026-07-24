@@ -1,56 +1,187 @@
 :host {
   display: block;
-  min-width: 0;
+  width: 100%;
 }
 
 .chat-input {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.75rem;
   align-items: end;
-
-  min-width: 0;
-  padding: 0.75rem;
-
-  border: 1.5px solid rgba(255, 255, 255, 0.82);
-  border-radius: 22px;
-
-  background: rgba(45, 36, 38, 0.46);
-
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-}
-
-.chat-input textarea {
-  box-sizing: border-box;
+  gap: 10px;
 
   width: 100%;
-  min-width: 0;
-  min-height: 48px;
-  max-height: 150px;
+  min-height: 62px;
+  padding: 8px 8px 8px 18px;
 
-  padding: 0.75rem 0.85rem;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 20px;
 
-  resize: none;
-  overflow-y: auto;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 
-  border: none;
-  outline: none;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
-  background: transparent;
-  color: #ffffff;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
 
-  font-family: inherit;
-  font-weight: 700;
-  line-height: 1.4;
-}
+  &:focus-within {
+    border-color: rgba(156, 28, 28, 0.6);
 
-.chat-input textarea::placeholder {
-  color: rgba(255, 255, 255, 0.52);
+    box-shadow:
+      0 14px 36px rgba(0, 0, 0, 0.22),
+      0 0 0 3px rgba(156, 28, 28, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  }
+
+  &--deshabilitado {
+    opacity: 0.72;
+  }
+
+  &__campo {
+    display: block;
+
+    width: 100%;
+    min-height: 44px;
+    max-height: 180px;
+    padding: 10px 2px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    color: #1d1d1f;
+    caret-color: #8f1c1c;
+
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+
+    background: transparent;
+    border: 0;
+    outline: 0;
+    resize: none;
+
+    scrollbar-width: thin;
+    scrollbar-color:
+      rgba(45, 45, 48, 0.24)
+      transparent;
+
+    &::placeholder {
+      color: rgba(48, 48, 52, 0.58);
+      opacity: 1;
+    }
+
+    &:disabled {
+      color: rgba(29, 29, 31, 0.68);
+      cursor: not-allowed;
+    }
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(45, 45, 48, 0.22);
+      border-radius: 999px;
+    }
+  }
+
+  &__boton {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+
+    width: 44px;
+    height: 44px;
+    padding: 0;
+
+    color: #ffffff;
+    cursor: pointer;
+
+    background:
+      linear-gradient(
+        145deg,
+        #801919,
+        #b52929
+      );
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+
+    box-shadow:
+      0 7px 18px rgba(88, 8, 8, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16);
+
+    transition:
+      transform 140ms ease,
+      background-color 140ms ease,
+      box-shadow 140ms ease,
+      opacity 140ms ease;
+
+    svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 9px 22px rgba(88, 8, 8, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgba(156, 28, 28, 0.25);
+      outline-offset: 3px;
+    }
+
+    &:disabled {
+      color: rgba(255, 255, 255, 0.7);
+      cursor: not-allowed;
+
+      background: rgba(99, 99, 104, 0.5);
+      box-shadow: none;
+      opacity: 0.55;
+    }
+  }
 }
 
 @media (max-width: 640px) {
   .chat-input {
-    grid-template-columns: 1fr;
+    min-height: 56px;
+    padding: 6px 6px 6px 14px;
+    border-radius: 17px;
+
+    &__campo {
+      min-height: 42px;
+      padding: 9px 2px;
+
+      font-size: 0.94rem;
+    }
+
+    &__boton {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 }
