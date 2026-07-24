@@ -136,3 +136,40 @@ def eliminar_base(id_base, id_usuario):
         shutil.rmtree(ruta)
 
     return filas
+
+def obtener_base_por_id_y_usuario(id_base: int, id_usuario: int):
+    """
+    Obtiene una base de conocimiento únicamente cuando pertenece
+    al usuario autenticado.
+
+    Devuelve:
+        sqlite3.Row si la base existe y pertenece al usuario.
+        None si no existe o pertenece a otro usuario.
+    """
+
+    conexion = get_connection()
+
+    try:
+        cursor = conexion.cursor()
+
+        cursor.execute(
+            """
+            SELECT
+                id_base,
+                id_usuario,
+                nombre,
+                descripcion,
+                ruta_carpeta,
+                fecha_creacion
+            FROM bases_conocimiento
+            WHERE id_base = ?
+              AND id_usuario = ?
+            LIMIT 1
+            """,
+            (id_base, id_usuario)
+        )
+
+        return cursor.fetchone()
+
+    finally:
+        conexion.close()

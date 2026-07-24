@@ -19,6 +19,9 @@
     },
     {
       "name": "Archivos"
+    },
+    {
+      "name": "Chat"
     }
   ],
   "paths": {
@@ -352,7 +355,121 @@
           }
         }
       }
+    },
+    "/api/chat/preguntar": {
+  "post": {
+    "tags": [
+      "Chat"
+    ],
+    "summary": "Realizar una pregunta sobre una base de conocimiento",
+    "description": "Endpoint protegido que valida que la base pertenezca al usuario autenticado. En esta versión devuelve una respuesta simulada y no utiliza todavía RAG ni modelos de lenguaje.",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/PreguntaChat"
+          },
+          "examples": {
+            "preguntaProyecto": {
+              "summary": "Pregunta sobre Proyecto Terminal",
+              "value": {
+                "id_base": 4,
+                "pregunta": "¿Cuáles son los objetivos del proyecto?"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Pregunta recibida y procesada correctamente",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RespuestaChat"
+            },
+            "examples": {
+              "respuestaSimulada": {
+                "value": {
+                  "respuesta": "Recibí tu pregunta y se consultará la base de conocimiento Proyecto Terminal.",
+                  "id_base": 4,
+                  "nombre_base": "Proyecto Terminal",
+                  "fuentes": [],
+                  "modo": "simulado"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Petición inválida",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "examples": {
+              "preguntaVacia": {
+                "value": {
+                  "error": "La pregunta no puede estar vacía."
+                }
+              },
+              "idInvalido": {
+                "value": {
+                  "error": "El campo id_base debe ser un entero válido."
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "JWT ausente, inválido o expirado",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "La base no existe o no pertenece al usuario",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": "La base de conocimiento no fue encontrada."
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Error inesperado del servidor",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": "Ocurrió un error interno al procesar la solicitud."
+            }
+          }
+        }
+      }
     }
+  }
+}
   },
   "components": {
     "securitySchemes": {
@@ -441,7 +558,78 @@
             "example": "Base de conocimiento con archivos sobre IA, embeddings y RAG."
           }
         }
-      }
+      },
+      "PreguntaChat": {
+  "type": "object",
+  "required": [
+    "id_base",
+    "pregunta"
+  ],
+  "properties": {
+    "id_base": {
+      "type": "integer",
+      "minimum": 1,
+      "example": 4
+    },
+    "pregunta": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000,
+      "example": "¿Cuáles son los objetivos del proyecto?"
+    }
+  }
+},
+"RespuestaChat": {
+  "type": "object",
+  "required": [
+    "respuesta",
+    "id_base",
+    "nombre_base",
+    "fuentes",
+    "modo"
+  ],
+  "properties": {
+    "respuesta": {
+      "type": "string",
+      "example": "Recibí tu pregunta y se consultará la base de conocimiento Proyecto Terminal."
+    },
+    "id_base": {
+      "type": "integer",
+      "example": 4
+    },
+    "nombre_base": {
+      "type": "string",
+      "example": "Proyecto Terminal"
+    },
+    "fuentes": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "example": []
+    },
+    "modo": {
+      "type": "string",
+      "enum": [
+        "simulado",
+        "rag"
+      ],
+      "example": "simulado"
+    }
+  }
+},
+"Error": {
+  "type": "object",
+  "required": [
+    "error"
+  ],
+  "properties": {
+    "error": {
+      "type": "string",
+      "example": "La solicitud no pudo ser procesada."
+    }
+  }
+  }
     }
   }
 }
